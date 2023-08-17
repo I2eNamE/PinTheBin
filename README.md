@@ -1,4 +1,4 @@
-# pinTheBin
+# PinTheBin
 Project for Software Development Practice 1 - Section 2 (PKI)
 
 # Contributors
