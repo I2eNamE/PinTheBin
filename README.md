@@ -13,7 +13,8 @@
   <a href="https://github.com/I2eNamE/PinTheBin/issues">Request Feature</a>
   |
   <a href="https://github.com/I2eNamE/PinTheBin/issues">Report Bug</a>
-</a>
+  |
+  <a href="https://www.figma.com/file/f2s3216X8QMufOLoHEMDZT/PinTheBinFrontendV1?type=design&node-id=0%3A1&mode=design&t=7SBPC1QQjXNYJGVF-1&authuser=0">View Prototype in Figma</a>
 <br/>
 
 ## 📃 Wiki for this project
