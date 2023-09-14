@@ -21,36 +21,6 @@ export const ForgotPasswordBox = () => {
             required
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="oldPassword" className="block text-xl text-gray-600">รหัสผ่านเดิม</label>
-          <input
-            type="password"
-            id="oldPassword"
-            className="w-full px-3 py-2 border border-ebebeb rounded-xl focus:outline-none bg-f4f4f4 font-normal"
-            placeholder="รหัสผ่านเดิม"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="newPassword" className="block text-xl text-gray-600">รหัสผ่านใหม่</label>
-          <input
-            type="password"
-            id="newPassword"
-            className="w-full px-3 py-2 border border-ebebeb rounded-xl focus:outline-none bg-f4f4f4 font-normal"
-            placeholder="รหัสผ่านใหม่"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="confirmNewPassword" className="block text-xl text-gray-600">ยืนยันรหัสผ่านใหม่</label>
-          <input
-            type="password"
-            id="confirmNewPassword"
-            className="w-full px-3 py-2 border border-ebebeb rounded-xl focus:outline-none bg-f4f4f4 font-normal"
-            placeholder="ยืนยันรหัสผ่านใหม่"
-            required
-          />
-        </div>
         <div className="text-center">
           <button
             type="submit"
