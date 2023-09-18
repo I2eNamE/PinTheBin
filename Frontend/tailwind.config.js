@@ -12,6 +12,8 @@ module.exports = {
       '717171': '#717171',
       'ffffff': '#ffffff',
       '505050': '#505050',
+      'FF0000': '#FF0000',
+      'bdbdbd': '#BDBDBD',
     },
     extend: {
       backgroundImage: {

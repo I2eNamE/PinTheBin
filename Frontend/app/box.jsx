@@ -33,13 +33,16 @@ export const Box = () => {
           <div className="text-center">
             <button
               type="submit"
-              className="w-full px-4 py-4 mb-3 bg-blue-500 text-xl text-ffffff rounded-xl bg-717171"
+              className="w-full px-4 py-4 mb-3 text-xl text-ffffff rounded-xl bg-717171 hover:scale-105 transition-all"
             >
               เข้าสู่ระบบ
             </button>
           </div>
           <div className="text-center pt-2">
             <p>ยังไม่มีบัญชี? <a href="/register" className="text-505050 hover:underline">สร้างบัญชีที่นี่</a></p>
+          </div>
+          <div className='font-NotoSansThai py-1 text-center'>
+            <a href='/home' className='text-xs text-bdbdbd hover:text-FF0000'>This is under development.</a>
           </div>
         </form>
       </div>

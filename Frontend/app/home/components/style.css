@@ -1,0 +1,50 @@
+.home-topbar {
+  z-index: 1;
+}
+
+/* Sidebar styles */
+.home-sidebar {
+  position: fixed;
+  top: 0;
+  left: -300px; /* Initially hide the sidebar by moving it to the left */
+  width: 15rem; /* Width of the sidebar */
+  height: 100%;
+  background-color: #f4f4f4;
+  transition: left 0.3s; /* Add a smooth transition for sliding in/out */
+  z-index: 1; /* Ensure the sidebar is on top */
+  border-top-right-radius: 1.5rem; /* Rounded corners for the top-right */
+  border-bottom-right-radius: 1.5rem; /* Rounded corners for the bottom-right */
+}
+
+/* Apply styles when the sidebar is open */
+.home-sidebar.open {
+  left: 0; /* Move the sidebar to the visible position */
+}
+
+/* Map container styles */
+.map-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Fill the remaining width */
+  height: 100%; /* Fill the entire height */
+  z-index: -1; /* Ensure the map is behind the sidebar */
+}
+
+.sidebar-dim {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: none;
+  background-color: black;
+}
+
+.sidebar-dim.open {
+  opacity: 0.5;
+  display: block;
+  transition: opacity 1s ease-in-out;
+}

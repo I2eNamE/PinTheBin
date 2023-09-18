@@ -5,7 +5,7 @@ export const RegisterBox = () => {
   return (
     <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 font-NotoSansThai font-medium'>
       <div className="flex items-center justify-between mb-3">
-        <a href="/"> <button className="text-xl text-gray-600 focus:outline-none">
+        <a href="/"> <button className="text-xl text-gray-600 focus:outline-none hover:scale-110 transition-all">
             <IoMdArrowRoundBack size={40} /></button></a>
         <h2 className="text-3xl">สร้างบัญชีใหม่</h2>
         <div className="w-8"></div> {/* Add an empty div for spacing */}
@@ -54,7 +54,7 @@ export const RegisterBox = () => {
         <div className="text-center">
           <button
             type="submit"
-            className="w-full px-4 py-4 mb-3 bg-blue-500 text-xl text-ffffff rounded-xl bg-717171"
+            className="w-full px-4 py-4 mb-3 bg-blue-500 text-xl text-ffffff rounded-xl bg-717171 hover:scale-105 transition-all"
           >
             สร้างบัญชี
           </button>
