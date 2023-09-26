@@ -1,6 +1,6 @@
 export const sidebardata = [
     {
-        title: "รายการโปรด",
+        title: "ประวัติการรายงาน",
         link: "/comingsoon",
     },
     {

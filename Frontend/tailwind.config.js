@@ -14,6 +14,12 @@ module.exports = {
       '505050': '#505050',
       'FF0000': '#FF0000',
       'bdbdbd': '#BDBDBD',
+      'c9c9c9': '#C9C9C9',
+      '0021f5': '#0021F5',
+      'ffc82f': '#FFC82F',
+      '00ab15': '#00AB15',
+      'dd3327': '#DD3327',
+      '39da00': '#39DA00',
     },
     extend: {
       backgroundImage: {

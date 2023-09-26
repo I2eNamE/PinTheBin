@@ -1,6 +1,29 @@
-import React from "react";
+'use client'
 
-export const Box = () => {
+import axios from "axios";
+import React from "react";
+import { useState } from "react";
+
+export const LoginBox = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    axios.post("http://tapanawat.myftp.org:8080/login", {
+      email: email,
+      password: password,
+    }).then((response) => {
+      console.log(response.data);
+      // if(response.data.status == 200){
+      //   window.location.href = "/home";
+      // }
+    }
+    ).catch((error) => {
+      console.log(error);
+    }
+    );
+  }
+
   return (
     <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 font-NotoSansThai font-medium'>
         <div className="text-center mb-3">
@@ -15,6 +38,7 @@ export const Box = () => {
               className="w-full px-3 py-2 border border-ebebeb rounded-xl focus:outline-none bg-f4f4f4 font-normal"
               placeholder="อีเมล"
               required
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -25,6 +49,7 @@ export const Box = () => {
               className="w-full px-3 py-2 border border-ebebeb rounded-xl focus:outline-none bg-f4f4f4 font-normal"
               placeholder="รหัสผ่าน"
               required
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="text-right mb-4">
@@ -32,8 +57,9 @@ export const Box = () => {
           </div>
           <div className="text-center">
             <button
-              type="submit"
+              type="button"
               className="w-full px-4 py-4 mb-3 text-xl text-ffffff rounded-xl bg-717171 hover:scale-105 transition-all"
+              onClick={handleLogin}
             >
               เข้าสู่ระบบ
             </button>

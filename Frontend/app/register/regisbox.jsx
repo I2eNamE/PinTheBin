@@ -8,7 +8,7 @@ export const RegisterBox = () => {
         <a href="/"> <button className="text-xl text-gray-600 focus:outline-none hover:scale-110 transition-all">
             <IoMdArrowRoundBack size={40} /></button></a>
         <h2 className="text-3xl">สร้างบัญชีใหม่</h2>
-        <div className="w-8"></div> {/* Add an empty div for spacing */}
+      <div className="w-8"></div> {/* Add an empty div for spacing */}
     </div>
       <form>
         <div className="mb-4">

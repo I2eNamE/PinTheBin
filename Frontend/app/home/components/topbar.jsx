@@ -14,7 +14,7 @@ export const Topbar = ({ isSidebarOpen, toggleSidebar }) => {
       <div className="px-4 py-4">
         <div className="bg-ffffff rounded-xl px-2 py-2 w-full flex justify-between items-center">
           {/* Menu Button */}
-          <button className="text-blue-500" onClick={toggleSidebar}>
+          <button className="hover:scale-105 transition" onClick={toggleSidebar}>
             <MdMenu size={40}/>
           </button>
           {/* Add some space by using | */}
