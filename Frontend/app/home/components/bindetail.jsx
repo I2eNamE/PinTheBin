@@ -1,9 +1,23 @@
 import { MdFlag } from "react-icons/md";
 import { BiSolidPencil } from "react-icons/bi";
 import { MdPinDrop, MdInfo } from "react-icons/md";
-import { bindetaildata } from "../data/bindetail";
+import { bindetaildata } from "../data/bindetaildata";
 import { BsChevronCompactDown } from "react-icons/bs";
+import BinTypes from "./bintype";
 import '../components/style.css'
+
+const formatDate = (timestamp) => {
+    const options = {
+      timeZone: 'Asia/Bangkok',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    const formattedDate = new Date(timestamp).toLocaleString('en-GB', options);
+    return formattedDate;
+  };
 
 export const BinDetail = ({ onClose }) => {
     // Assuming there's only one item in bindetaildata array
@@ -42,6 +56,15 @@ export const BinDetail = ({ onClose }) => {
                             <p className="text-2xl font-medium pl-2">คำอธิบาย</p>
                         </div>
                         <p className="bin-description text-2xl mt-2 ml-5 mr-5 mb-5 font-normal text-717171">{binData.description}</p>
+                        <div className="flex justify-center items-center">
+                            <p className="text-2xl font-medium pl-2">ประเภทถังขยะ</p>
+                        </div>
+                        <div>
+                            <BinTypes bins={binData} />
+                        </div>
+                        <p className="flex justify-center text-base font-thin pl-2 mt-5">
+                            แก้ไขล่าสุดเมื่อ {formatDate(binData.timestamp)}
+                        </p>
                     </div>
                 </div>
             </div>
