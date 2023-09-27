@@ -10,7 +10,7 @@ export const Topbar = ({ isSidebarOpen, toggleSidebar }) => {
   // };
 
   return (
-    <div className={`topbar bg-505050 sm:w-full md:w-1/3 rounded-bl-xl rounded-br-xl ${isSidebarOpen ? "sidebar-open" : ""}`}>
+    <div className={`topbar bg-505050 sm:w-full md:w-96 rounded-bl-xl rounded-br-xl ${isSidebarOpen ? "sidebar-open" : ""}`}>
       <div className="px-4 py-4">
         <div className="bg-ffffff rounded-xl px-2 py-2 w-full flex justify-between items-center">
           {/* Menu Button */}

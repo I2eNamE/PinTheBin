@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useJsApiLoader } from "@react-google-maps/api";
 import { Sidebar } from "./components/sidebar";
 import { Topbar } from './components/topbar';
+import { BinDetail } from './components/bindetail';
 import { AddBinBtn } from './components/addbinbtn';
 import { SetCenterBtn } from './components/setcenterbtn';
 import { Map } from './components/map';
@@ -21,8 +22,11 @@ export default function Home() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  
-  
+  const [isBinDetailVisible, setIsBinDetailVisible] = useState(false);
+  const toggleBinDetail = () => {
+    setIsBinDetailVisible(!isBinDetailVisible);
+  };
+
   // Set current location in state
   const defaultCenter = { // Default center coordinates
     lat: 13.8242059,
@@ -32,6 +36,7 @@ export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(defaultCenter); // Initialize with default center
   
   const addMarkerToMap = () => {
+    setcurrentLocation()
     console.log(currentLocation);
     markers.push({
       id: markers.length + 1,
@@ -63,7 +68,9 @@ export default function Home() {
       <div className={`home-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         {isSidebarOpen && <Sidebar isSidebarOpen={isSidebarOpen} />}
       </div>
-
+      <div className={`home-bindetail ${isBinDetailVisible ? 'open' : ''}`}>
+        <BinDetail onClose={toggleBinDetail} />
+      </div>
       <div className="home-addbinbtn absolute bottom-5 right-5">
         <div className="flex flex-col">
           <div className='pb-5'>
@@ -75,9 +82,20 @@ export default function Home() {
         </div>
       </div>
 
+      <div
+        className={`sidebar-dim ${isBinDetailVisible ? 'open' : ''}`}
+        onClick={toggleBinDetail}
+      ></div>
+
       {/* DevMode */}
-      <div className="absolute bottom-5 left-5">
+      <div className="absolute bottom-5 left-5 flex">
         <button className="w-16 h-16 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition" onClick={addMarkerToMap}>Add Marker</button>
+        <button
+          className="w-24 h-16 ml-2 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition"
+          onClick={toggleBinDetail}
+        >
+          Show Bin Detail
+        </button>
       </div>
     </div>
   );

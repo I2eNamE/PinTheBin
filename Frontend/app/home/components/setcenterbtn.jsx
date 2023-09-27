@@ -19,7 +19,7 @@ export const SetCenterBtn = ({ onGetCurrentLocation }) => {
     <div className="flex justify-center">
       <button
         type="button"
-        className="bg-ffffff text-white rounded-full p-5 shadow-lg font-NotoSansThai font-medium text-xl hover:scale-105 transition-all"
+        className="bg-ffffff text-white rounded-full p-5 shadow-lg font-NotoSansThai font-medium text-xl hover:scale-105 hover:bg-ebebeb transition-all"
         onClick={getLocation}
       >
         <MdMyLocation className="inline-block w-10 h-10" color='#494949'/>
