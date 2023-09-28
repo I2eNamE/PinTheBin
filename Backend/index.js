@@ -193,6 +193,7 @@ app.get('/report/:id', (req, res) => {
     })
 })
 
+// Report bin
 app.post('/report', (req, res) => {
     let {user_report, bin, reportid, description = null} = req.body;
     let command = `INSERT INTO report (user_report,bin,report_detail_id,description) VALUE(?,?,?,?);`;

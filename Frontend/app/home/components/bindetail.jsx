@@ -25,8 +25,8 @@ export const BinDetail = ({ onClose }) => {
 
     return (
         <div className="bin-detail-overlay">
-            <div className="flex justify-center items-center py-10 font-NotoSansThai"> {/*bin-detail-slide*/}
-                <div className="bindetail bg-f4f4f4 w-full md:w-96 rounded-xl overflow-y-auto no-scrollbar" style={{ maxHeight: '80vh', overflowScrolling: 'touch' }}>
+            <div className=" w-full py-10 font-NotoSansThai">
+                <div className="bindetail bg-f4f4f4 md:w-96 rounded-xl overflow-y-auto no-scrollbar" style={{ maxHeight: '80vh', overflowScrolling: 'touch' }}>
                     <div className="bin-detail-close flex justify-center bg-f4f4f4 rounded-xl w-full md:w-96 cursor-pointer hover:scale-110 hover:bg-ebebeb transition" onClick={onClose}>
                         <BsChevronCompactDown size={50} color="#505050" />
                     </div>
@@ -39,12 +39,16 @@ export const BinDetail = ({ onClose }) => {
                     </div>
                     <div className="bg-ffffff rounded-xl p-4 m-3">
                         <div className="flex justify-end">
-                            <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg hover:scale-105 hover:bg-ebebeb transition">
-                                <MdFlag size={30} color="#505050" />
-                            </button>
-                            <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg ml-1 hover:scale-105 hover:bg-ebebeb transition">
-                                <BiSolidPencil size={30} color="#505050" />
-                            </button>
+                            <a href="/reportbin">
+                                <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg hover:scale-105 hover:bg-ebebeb transition">
+                                    <MdFlag size={30} color="#505050" />
+                                </button>
+                            </a>
+                            <a href="/editbin">
+                                <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg ml-1 hover:scale-105 hover:bg-ebebeb transition">
+                                    <BiSolidPencil size={30} color="#505050" />
+                                </button>
+                            </a>
                         </div>
                         <div className="flex justify-start items-center">
                             <MdPinDrop size={30} color="#505050" />

@@ -1,7 +1,7 @@
 export const sidebardata = [
     {
-        title: "ประวัติการรายงาน",
-        link: "/comingsoon",
+        title: "รายงาน",
+        link: "/report",
     },
     {
         title: "เกี่ยวกับ",

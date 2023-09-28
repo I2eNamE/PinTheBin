@@ -9,6 +9,7 @@ import { AddBinBtn } from './components/addbinbtn';
 import { SetCenterBtn } from './components/setcenterbtn';
 import { Map } from './components/map';
 import { markerdata as markers } from "./data/markerdata";
+import { SearchBar } from './components/searchbar';
 import "./components/style.css";
 
 export default function Home() {
@@ -51,6 +52,10 @@ export default function Home() {
     console.log(markers);
   }
 
+  const gotoeditbinpage = () => {
+    window.location.href = '/editbin';
+  }
+
   useEffect(() => {
     console.log(currentLocation); // This will log the updated currentLocation
   }, [currentLocation]); // This useEffect will run whenever currentLocation changes
@@ -61,16 +66,21 @@ export default function Home() {
       <div className="map-container">
         {isLoaded && <Map center={currentLocation} />}
       </div>
+      
       <div className={`sidebar-dim ${isSidebarOpen ? "open" : ""}`} onClick={toggleSidebar}></div>
+      
       <div className="home-topbar">
         <Topbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </div>
+
       <div className={`home-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         {isSidebarOpen && <Sidebar isSidebarOpen={isSidebarOpen} />}
       </div>
+
       <div className={`home-bindetail ${isBinDetailVisible ? 'open' : ''}`}>
         <BinDetail onClose={toggleBinDetail} />
       </div>
+
       <div className="home-addbinbtn absolute bottom-5 right-5">
         <div className="flex flex-col">
           <div className='pb-5'>
@@ -87,6 +97,10 @@ export default function Home() {
         onClick={toggleBinDetail}
       ></div>
 
+      {/* <div className='home-searchbar'>
+        <SearchBar />
+      </div> */}
+
       {/* DevMode */}
       <div className="absolute bottom-5 left-5 flex">
         <button className="w-16 h-16 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition" onClick={addMarkerToMap}>Add Marker</button>
@@ -96,6 +110,7 @@ export default function Home() {
         >
           Show Bin Detail
         </button>
+        <button className="w-24 h-16 ml-2 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition" onClick={gotoeditbinpage}>Go to edit bin page</button>
       </div>
     </div>
   );

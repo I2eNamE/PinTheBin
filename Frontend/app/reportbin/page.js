@@ -5,33 +5,27 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import { BsFillPinMapFill } from 'react-icons/bs';
 import { ToggleButtons } from '../addbin/components/bintype';
 import { getCurrentLocation } from '../home/utils/getcurrentlocation';
-import { markerdata as markers } from '../home/data/markerdata';
 
-export default function Addbin() {
+export default function ReportBin() {
   const [buttonStates, setButtonStates] = useState(null);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [markerName, setMarkerName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
+  const [reportCategory, setReportCategory] = useState('');
+  const [reportContent, setReportContent] = useState('');
 
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);
   };
 
   const addMarkerToMap = (name, location, buttonStates) => {
-    markers.push({
-      id: markers.length + 1,
-      name: name,
-      position: location,
-      ...buttonStates,
-    });
-    console.log(markers);
+    // Your logic to add the marker to the map goes here
+    console.log('Adding marker to the map:', name, location, buttonStates);
   };
 
-  // Function to get the user's location
   const getLocation = () => {
     getCurrentLocation(
       (userLocation) => {
-        // Update the locationValue state with the obtained location
         setLocationValue(userLocation);
         console.log('User location:', userLocation);
       },
@@ -41,8 +35,11 @@ export default function Addbin() {
     );
   };
 
+  useEffect(() => {
+    getLocation();
+  }, []);
+
   const handleButtonClick = (buttonName) => {
-    // Use the onButtonStateChange function passed from props to update the parent state
     const newButtonStates = {
       ...buttonStates,
       [buttonName]: {
@@ -50,25 +47,28 @@ export default function Addbin() {
         active: !buttonStates[buttonName].active,
       },
     };
-    onButtonStateChange(newButtonStates);
+    handleButtonStateChange(newButtonStates);
   };
 
   const buttonContent = isButtonClicked ? (
-    <>
-      <img
-        src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
-        alt="เพิ่มถังขยะ"
-        className="w-6 h-6 mr-2"
-      />
-    </>
+    <img
+      src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
+      alt="Report Bin"
+      className="w-6 h-6 mr-2"
+    />
   ) : (
-    'เพิ่มถังขยะ'
+    'ยืนยันการรายงาน'
   );
 
-  useEffect(() => {
-    // Call getLocation when the component mounts
-    getLocation();
-  }, []);
+  const reportCategories = [
+    'มีกลิ่นเหม็น',
+    'ขยะมากเกินไป',
+    'หาถังขยะไม่เจอ',
+    'ถังขยะผิดประเภท',
+    'พื้นที่บริเวณนั้นไม่สะอาด',
+    'ถังขยะเสียหายหรือใช้งานไมได้',
+    'อื่น ๆ',
+  ];
 
   return (
     <div className="bg-f4f4f4 p-8 min-h-screen font-NotoSansThai font-medium">
@@ -78,7 +78,7 @@ export default function Addbin() {
             <IoMdArrowRoundBack size={40} />
           </button>
         </a>
-        <h2 className="text-3xl">เพิ่มถังขยะ</h2>
+        <h2 className="text-3xl">รายงานถังขยะ</h2>
         <div className="w-8"></div>
       </div>
 
@@ -86,19 +86,19 @@ export default function Addbin() {
         <form>
           <div className="mb-4">
             <label htmlFor="description" className="block text-xl text-left mb-1">
-              คำอธิบาย
+              หัวข้อการรายงาน
             </label>
             <textarea
               type="text"
               id="description"
               className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
-              placeholder="ใส่คำอธิบายเพิ่มเติม เช่นสถานที่ใกล้เคียง"
+              placeholder="เพิ่มหัวข้อการรายงาน"
               required
               value={markerName}
               onChange={(e) => setMarkerName(e.target.value)}
             />
           </div>
-          <div className="relative"> {/* Add 'relative' class for positioning */}
+          <div className="mb-4 relative">
             <label htmlFor="location" className="block text-xl text-left mb-1">
               ตำแหน่ง
             </label>
@@ -118,30 +118,56 @@ export default function Addbin() {
               <BsFillPinMapFill size={20} />
             </button>
           </div>
+          <div className="mb-4">
+            <label htmlFor="reportCategory" className="block text-xl text-left mb-1">
+              หมวดหมู่การรายงาน
+            </label>
+            <select
+              id="reportCategory"
+              className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
+              value={reportCategory}
+              required
+              onChange={(e) => setReportCategory(e.target.value)}
+            >
+              <option value="" disabled>Select a category</option>
+              {reportCategories.map((category, index) => (
+                <option key={index} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+          <div className="">
+            <label htmlFor="reportContent" className="block text-xl text-left mb-1">
+              เนื้อหาการรายงาน
+            </label>
+            <textarea
+              type="text"
+              id="reportContent"
+              className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
+              placeholder="เพิ่มเนื้อหาการรายงาน"
+              required={reportCategory === 'อื่น ๆ'}
+              value={reportContent}
+              onChange={(e) => setReportContent(e.target.value)}
+            />
+          </div>
         </form>
       </div>
 
-      <div className="flex flex-col">
-        <div className="flex justify-center items-center">
-          <ToggleButtons onButtonStateChange={handleButtonStateChange} />
-        </div>
-      </div>
-      <div className="mt-4 flex justify-center">
+      <div className="flex justify-center">
         <a href="/home">
-          <button
+            <button
             onClick={() => {
-              addMarkerToMap(markerName, locationValue, buttonStates);
-              setLocationValue({ lat: 0, lng: 0 });
-              setIsButtonClicked(true)
+                addMarkerToMap(markerName, locationValue, buttonStates);
+                setLocationValue({ lat: 0, lng: 0 });
+                setIsButtonClicked(true)
             }}
             className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
-              isButtonClicked ? 'bg-39da00 text-ffffff' : 'bg-717171 text-ffffff hover:scale-105'
+                isButtonClicked ? 'bg-39da00 text-ffffff' : 'bg-717171 text-ffffff hover:scale-105'
             }`}
-          >
+            >
             {buttonContent}
-          </button>
+            </button>
         </a>
       </div>
     </div>
   );
-}
+};
