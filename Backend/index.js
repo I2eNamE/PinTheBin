@@ -206,6 +206,18 @@ app.post('/report', (req, res) => {
 })
 
 
+
+app.get("/reportdetail",(req,res)=>{
+    let command = "SELECT * FROM report_detail;"
+    conn.query(command,(err,result)=>{
+        if (err) throw err;
+        else {
+            res.status(200).send({error:false,massage:"search report detail complete",result:result})
+        }
+       })
+})
+
+
 app.listen(port, () => {
     console.log(`server running on port ${port}`)
 })
