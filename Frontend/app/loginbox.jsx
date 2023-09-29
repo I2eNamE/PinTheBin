@@ -25,7 +25,7 @@ export const LoginBox = () => {
   }
 
   return (
-    <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 font-NotoSansThai font-medium'>
+    <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 m-3 font-NotoSansThai font-medium'>
         <div className="text-center mb-3">
           <h2 className="text-3xl">เข้าสู่ระบบด้วยอีเมล</h2>
         </div>

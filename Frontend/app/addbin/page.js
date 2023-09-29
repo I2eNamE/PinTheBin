@@ -64,6 +64,11 @@ export default function Addbin() {
   ) : (
     'เพิ่มถังขยะ'
   );
+  
+  const handleFileChange = (e) => {
+    // Handle file changes here if needed
+    console.log('File selected:', e.target.files[0]);
+  };
 
   useEffect(() => {
     // Call getLocation when the component mounts
@@ -98,7 +103,7 @@ export default function Addbin() {
               onChange={(e) => setMarkerName(e.target.value)}
             />
           </div>
-          <div className="relative"> {/* Add 'relative' class for positioning */}
+          <div className="relative mb-4"> {/* Add 'relative' class for positioning */}
             <label htmlFor="location" className="block text-xl text-left mb-1">
               ตำแหน่ง
             </label>
@@ -117,6 +122,18 @@ export default function Addbin() {
             >
               <BsFillPinMapFill size={20} />
             </button>
+          </div>
+          <div>
+            <label htmlFor="file" className="block text-xl text-left mb-1">
+              อัปโหลดรูปภาพ
+            </label>
+            <input
+              type="file"
+              id="file"
+              accept="image/*"  // Specify accepted file types if needed
+              onChange={handleFileChange}
+              className="block p-2 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
+            />
           </div>
         </form>
       </div>

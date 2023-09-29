@@ -7,22 +7,8 @@ export const SearchBar = () => {
     <div className="bg-f4f4f4 sm:w-full md:w-1/3 rounded-xl">
       <div className="p-4 mt-1 shadow-xl">
         <div className="bg-ffffff rounded-xl shadow-xl">
-          {bindetaildata.map((item, index) => (
-            <div key={index} className="flex items-center">
-              {/* <img src={item.picture} alt="Location" className="w-20 h-20 rounded-full mr-4" /> */}
-              <div>
-                <div>
-                    <MdPinDrop size={30} color="#505050" />
-                    <h3 className="text-xl font-bold">{item.location}</h3>
-                </div>
-
-                <p className="text-gray-500">{item.description}</p>
-                {/* <p className="text-gray-500">Timestamp: {item.timestamp}</p> */}
-                {/* <p className="text-gray-500">Position: Lat {item.position.lat}, Lng {item.position.lng}</p> */}
-                {/* Render other information as needed */}
-              </div>
-            </div>
-          ))}
+          <img src='https://cdn.discordapp.com/attachments/1154651284788498432/1156992599475880056/image.png?ex=6516fcd3&is=6515ab53&hm=f4c51418035a33ca48989a2ff9c7434192b5f39b9c72680149b06c7f057939f3&' alt="Background" className="rounded-xl w-full h-full object-cover" />
+          
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 export const RegisterBox = () => {
   return (
-    <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 font-NotoSansThai font-medium'>
+    <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 m-3 font-NotoSansThai font-medium'>
       <div className="flex items-center justify-between mb-3">
         <a href="/"> <button className="text-xl text-gray-600 focus:outline-none hover:scale-110 transition-all">
           <IoMdArrowRoundBack size={40} /></button></a>
