@@ -102,7 +102,7 @@ export default function Home() {
       </div> */}
 
       {/* DevMode */}
-      <div className="absolute bottom-5 left-5 flex">
+      <div className="absolute bottom-5 left-5 flex font-NotoSansThai">
         <button className="w-16 h-16 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition" onClick={addMarkerToMap}>Add Marker</button>
         <button
           className="w-24 h-16 ml-2 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition"
