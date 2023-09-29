@@ -1,21 +1,24 @@
 <p align="center">
+  <img src="https://github.com/ATOMIC09/PinTheBin/assets/66838025/609dc6ea-c31b-4ba3-b267-9d64933a46df" alt="Pin The Bin Logo" width="150" height="150">
   <h1 align="center">Welcome to PinTheBin repository</h3>
 </p>
 
 <p align="center">
+  <a href="https://github.com/I2eNamE/PinTheBin/issues">Request Feature</a>
+  |
+  <a href="https://github.com/I2eNamE/PinTheBin/issues">Report Bug</a>
+  |
+  <a href="https://www.figma.com/file/f2s3216X8QMufOLoHEMDZT/PinTheBinFrontendV1?type=design&node-id=0%3A1&mode=design&t=7SBPC1QQjXNYJGVF-1&authuser=0">View Prototype in Figma</a>
+  |
+  <a href="https://pinthebin.vercel.app/">Try using this app!</a>
+  <br/>
+  <br/>
   <img src="https://img.shields.io/github/contributors/I2eNamE/PinTheBin?color=dark-green">
   <img src="https://img.shields.io/github/forks/I2eNamE/PinTheBin?style=social">
   <img src="https://img.shields.io/github/stars/I2eNamE/PinTheBin?style=social">
   <img src="https://img.shields.io/github/issues/I2eNamE/PinTheBin">
   <img src="https://img.shields.io/github/license/I2eNamE/PinTheBin">
   <br/>
-  <br/>
-  <a href="https://github.com/I2eNamE/PinTheBin/issues">Request Feature</a>
-  |
-  <a href="https://github.com/I2eNamE/PinTheBin/issues">Report Bug</a>
-  |
-  <a href="https://www.figma.com/file/f2s3216X8QMufOLoHEMDZT/PinTheBinFrontendV1?type=design&node-id=0%3A1&mode=design&t=7SBPC1QQjXNYJGVF-1&authuser=0">View Prototype in Figma</a>
-<br/>
 
 ## 📃 Wiki for this project
 0. [Welcome](https://github.com/I2eNamE/pinTheBin/wiki/00-%E2%80%90-Welcome)
