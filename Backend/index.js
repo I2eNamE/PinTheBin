@@ -200,7 +200,9 @@ app.get('/report/:id', (req, res) => {
     })
 })
 
-
+app.get('/report',(req,res)=>{
+    req.send()
+})
 
 // Report bin
 app.post('/report', (req, res) => {
