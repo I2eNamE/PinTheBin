@@ -85,17 +85,18 @@ app.post('/user', (req, res) => {
 
 
 
-app.post('/picture',(req,res)=>{
-    let {id,path} = req.body;
+app.post('/picture', (req, res) => {
+    let { id, path } = req.body;
     let command = `UPDATE user_info
     SET picture = ? WHERE id = ?;`;
-    conn.query(command,[path,id],(err,result)=>{
+    conn.query(command, [path, id], (err, result) => {
         if (err) throw err;
         else {
-            res.send({error:false,
-            massage:"update picture complete",
-            result:result
-        })
+            res.send({
+                error: false,
+                massage: "update picture complete",
+                result: result
+            })
         }
     })
 
@@ -136,10 +137,10 @@ app.get("/bin/:id", (req, res) => {
 
 app.post('/bin', (req, res) => {
     let { lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
-    let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`; // TODO: Sanitize sql query
+    let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;
     let commandAdd = `INSERT INTO bin_info (lat,lng,description,red_bin,green_bin,yellow_bin,blue_bin,picture) VALUE
                     (?,?,?,?,?,?,?,?)`;
-    conn.query(commandSenrch, [lat, lng], (err, result) => {
+    conn.query(commandSearch, [lat, lng], (err, result) => {
         if (err) throw err; else if (result.length !== 0) {
             res.send({ error: true, message: "bin have been add in database" })
         } else {
@@ -156,29 +157,13 @@ app.post('/bin', (req, res) => {
 })
 
 app.patch('/bin', (req, res) => {
-    let { id, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin,picture = null } = req.body;
+    let { id, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
     let command = `UPDATE bin_info 
                     SET lat = ?, lng = ?, description = ?,red_bin = ?,
                     green_bin = ?,yellow_bin = ?,blue_bin = ?,picture = ?  WHERE id = ?;`;
-    conn.query(command, [lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin,picture  
-        
-        
-        , id], (err, result) => {
+    conn.query(command, [lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin, picture, id], (err, result) => {
         if (err) throw err; else {
-            res.send(result)
-        }
-    })
-})
-
-app.delete('/bin', (req, res) => {
-    let { user_report, lat, lng, description = null } = req.body;
-    let command = `INSERT INTO report (user_report,lat,lng,report_detail_id,description) 
-                    VALUE(?,?,?,?,?) `; // TODO: Sanitize sql query
-    conn.query(command, [user_report, lat, lng, 6, description], (err, result) => {
-        if (err) throw err; else {
-            res.send({
-                error: false, message: "report to delete bin complete", result: result
-            })
+            res.send({error:false,massage:"update bin complete",result:result})
         }
     })
 })
@@ -215,26 +200,17 @@ app.get('/report/:id', (req, res) => {
     })
 })
 
-app.get('/reportbydetail',(req,res)=>{
-    let {name} = req.body;
-    let command =  `SELECT * FROM report
-                        INNER JOIN report_detail ON report.report_detail_id = report_detail.id
-                        WHERE report_detail.report_name = ?;`;
-    conn.query(command,[name],(err,result)=>{
-        if (err) throw err;
-        else if (result.length == 0) res.status(404).send({erroe:true,massage:"repot not found"})
-        else {res.send({error:true,massage:"serach complete",result:result})}
-    })
-})
+
 
 // Report bin
 app.post('/report', (req, res) => {
-    let { user_report, lat, lng, reportid, description = null } = req.body;
-    let command = `INSERT INTO report (user_report,lat,lng,report_detail_id,description) VALUE(?,?,?,?,?);`;
-    conn.query(command, [user_report, lat, lng, reportid, description], (err, result) => {
+    let { user_report, lat, lng, description = null,category,header = null } = req.body;
+    let command = `INSERT INTO report (user_report,lat,lng,description,category,header) 
+                    VALUE(?,?,?,?,?,?) `; 
+    conn.query(command, [user_report, lat, lng, ], (err, result) => {
         if (err) throw err; else {
             res.send({
-                error: false, message: "insert complete", response: result
+                error: false, message: "report bin complete", result: result
             })
         }
     })
