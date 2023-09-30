@@ -47,8 +47,9 @@ app.get('/user', (req, res) => {
 })
 
 app.get('/user/:id', (req, res) => {
+    let id = req.params.id;
     let command = `SELECT * FROM user_info WHERE id=?`;
-    conn.query(command, [req.params.id], (err, result) => {
+    conn.query(command, [id], (err, result) => {
         if (err) throw err; else if (result.length === 0) {
             res.status(404).send({ error: true, message: `user id ${req.params.id} not found` });
         } else res.send({ error: false, message: `ok`, response: result });
@@ -83,17 +84,18 @@ app.post('/user', (req, res) => {
 })
 
 
-app.post('picture', (req, res) => {
-    let { id, path } = req.body;
-    let command = 'UPDATE bin_infp SET picture = ? WHERE id = ?';
-    conn.query(command, [path, id], (err, result) => {
+
+app.post('/picture',(req,res)=>{
+    let {id,path} = req.body;
+    let command = `UPDATE user_info
+    SET picture = ? WHERE id = ?;`;
+    conn.query(command,[path,id],(err,result)=>{
         if (err) throw err;
         else {
-            res.send({
-                error: false,
-                massage: "insert picture complete",
-                result: result
-            })
+            res.send({error:false,
+            massage:"update picture complete",
+            result:result
+        })
         }
     })
 
@@ -154,18 +156,18 @@ app.post('/bin', (req, res) => {
 })
 
 app.patch('/bin', (req, res) => {
-    let { id, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
+    let { id, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin,picture = null } = req.body;
     let command = `UPDATE bin_info 
                     SET lat = ?, lng = ?, description = ?,red_bin = ?,
                     green_bin = ?,yellow_bin = ?,blue_bin = ?,picture = ?  WHERE id = ?;`;
-    conn.query(command, [lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin, picture
-
-
+    conn.query(command, [lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin,picture  
+        
+        
         , id], (err, result) => {
-            if (err) throw err; else {
-                res.send(result)
-            }
-        })
+        if (err) throw err; else {
+            res.send(result)
+        }
+    })
 })
 
 app.delete('/bin', (req, res) => {
@@ -213,15 +215,15 @@ app.get('/report/:id', (req, res) => {
     })
 })
 
-app.get('/reportbydetail', (req, res) => {
-    let { name } = req.body;
-    let command = `SELECT * FROM report
+app.get('/reportbydetail',(req,res)=>{
+    let {name} = req.body;
+    let command =  `SELECT * FROM report
                         INNER JOIN report_detail ON report.report_detail_id = report_detail.id
                         WHERE report_detail.report_name = ?;`;
-    conn.query(command, [name], (err, result) => {
+    conn.query(command,[name],(err,result)=>{
         if (err) throw err;
-        else if (result.length == 0) res.status(404).send({ erroe: true, massage: "repot not found" })
-        else { res.send({ error: true, massage: "serach complete", result: result }) }
+        else if (result.length == 0) res.status(404).send({erroe:true,massage:"repot not found"})
+        else {res.send({error:true,massage:"serach complete",result:result})}
     })
 })
 
@@ -241,25 +243,19 @@ app.post('/report', (req, res) => {
 
 
 
-// report detail table
-app.get("/reportdetail", (req, res) => {
-    let command = "SELECT * FROM report_detail;"
-    conn.query(command, (err, result) => {
-        if (err) throw err;
-        else {
-            res.status(200).send({ error: false, massage: "search report detail complete", result: result })
-        }
-    })
+app.listen(port, () => {
+    console.log(`server running on port ${port}`)
 })
 
 
-https
-    .createServer({
-        key: fs.readFileSync("/etc/letsencrypt/live/tapanawat.myftp.org/privkey.pem", 'utf8'),
-        cert: fs.readFileSync("/etc/letsencrypt/live/tapanawat.myftp.org/cert.pem", 'utf8'),
-        ca: fs.readFileSync("/etc/letsencrypt/live/tapanawat.myftp.org/chain.pem", 'utf8')
-    },
-        app)
-    .listen(port, () => {
-        console.log('server is runing at port ', port)
-    });
+
+// https
+//     .createServer({
+//         key: fs.readFileSync("/etc/letsencrypt/live/tapanawat.myftp.org/privkey.pem", 'utf8'),
+//         cert: fs.readFileSync("/etc/letsencrypt/live/tapanawat.myftp.org/cert.pem", 'utf8'),
+//         ca: fs.readFileSync("/etc/letsencrypt/live/tapanawat.myftp.org/chain.pem", 'utf8')
+//     },
+//         app)
+//     .listen(port, () => {
+//         console.log('server is runing at port ', port)
+//     });
