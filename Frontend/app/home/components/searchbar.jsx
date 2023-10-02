@@ -1,7 +1,5 @@
 import React from 'react';
 import { bindetaildata } from '../data/bindetaildata';
-import { MdPinDrop } from 'react-icons/md';
-import { BiTrash } from 'react-icons/bi';
 import './style.css'
 
 
@@ -61,3 +59,5 @@ export const SearchBar = ({ onLocationClick }) => {
     </div>
   );
 };
+
+// Bug is caused by setting bin location to current location! (Will be fixed in the next version)

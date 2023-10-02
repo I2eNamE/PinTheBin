@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MdMenu } from "react-icons/md";
 import "./style.css";
-import { SearchBar } from './SearchBar';
+import { SearchBar } from '../components/searchbar';
 
 export const Topbar = ({ isSidebarOpen, toggleSidebar, onLocationClick }) => {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
