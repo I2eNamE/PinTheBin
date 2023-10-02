@@ -12,7 +12,9 @@ export const Sidebar = ({ isSidebarOpen }) => {
           <a href="/">
             <RxExit className="hover:scale-105 transition-all" size={30} />
           </a>
-          <img className='rounded-full border hover:scale-105 transition-all' src='https://cdn.discordapp.com/icons/1008658885030203422/b698495a36eb9390cdfe46430edbd716.png' alt="Profile" width="40" height="40" />
+          <a href="/profile">
+            <img className='rounded-full border hover:scale-105 transition-all' src='https://cdn.discordapp.com/icons/1008658885030203422/b698495a36eb9390cdfe46430edbd716.png' alt="Profile" width="40" height="40" />
+          </a>
         </div>
 
         {sidebardata.map((val, key) => (
