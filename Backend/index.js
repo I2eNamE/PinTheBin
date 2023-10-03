@@ -83,8 +83,6 @@ app.post('/user', (req, res) => {
 
 })
 
-
-
 app.post('/picture', (req, res) => {
     let { id, path } = req.body;
     let command = `UPDATE user_info
@@ -110,6 +108,35 @@ app.post('/login', (req, res) => {
             res.send({ error: false, message: "password correct welcome!", result: result })
         } else {
             res.status(404).send({ error: true, message: "email or password is incorrect try again!" })
+        }
+    })
+})
+
+app.patch('/changepassword', (req, res) => {
+    let { id, oldPassword, newPassword, passwordAgain } = req.body;
+    let commandSearch = `SELECT password FROM user_info where id = ?`;
+    let commandUpdate = `UPDATE user_info SET password = ? WHERE id = ?`;
+    if (newPassword !== passwordAgain) 
+    { res.status(400).send({
+         error: true, 
+         massage: "password not match" 
+        }) }
+    conn.query(commandSearch, [id], (err, result) => {
+        if (err) throw err;
+        else if (result.length == 0 || result[0].password !== oldPassword)
+         { res.status.send({
+             error: true, 
+             massage: "can not find old password or old password not correct" }
+             ) }
+        else {
+            conn.query(commandUpdate,[newPassword,id],(err,result)=>{
+                if (err) throw err;
+                else{res.send({
+                    error:false,
+                    massage:"update password",
+                    result:result
+                })}
+            })
         }
     })
 })
@@ -163,7 +190,7 @@ app.patch('/bin', (req, res) => {
                     green_bin = ?,yellow_bin = ?,blue_bin = ?,picture = ?  WHERE id = ?;`;
     conn.query(command, [lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin, picture, id], (err, result) => {
         if (err) throw err; else {
-            res.send({error:false,massage:"update bin complete",result:result})
+            res.send({ error: false, massage: "update bin complete", result: result })
         }
     })
 })
@@ -171,7 +198,9 @@ app.patch('/bin', (req, res) => {
 
 // end bin info and start report tablea
 app.get('/report', (req, res) => {
-    let command = `SELECT * FROM report;`;
+    let command = `SELECT report.id ,report.report_date , user_info.name, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
+                    from (( report inner join bin_info on report.bin = bin_info.id)
+                   inner join user_info on report.user_report = user_info.id);`;
     conn.query(command, (err, result) => {
         if (err) throw err; else if (result.length === 0) {
             res.status(404).send({
@@ -186,8 +215,11 @@ app.get('/report', (req, res) => {
 })
 
 app.get('/report/:id', (req, res) => {
-    let command = `SELECT * FROM report WHERE id= ?;`; // TODO: Sanitize sql query
-    conn.query(command, [req.params.id], (err, result) => {
+    let id = req.params.id;
+    let command = `SELECT report.id ,report.report_date , user_info.name, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
+    from (( report inner join bin_info on report.bin = bin_info.id)
+                   inner join user_info on report.user_report = user_info.id) WHERE id= ?;`; // TODO: Sanitize sql query
+    conn.query(command, [id], (err, result) => {
         if (err) throw err; else if (result.length === 0) {
             res.status(404).send({
                 error: true, message: "haven't report now"
@@ -200,19 +232,60 @@ app.get('/report/:id', (req, res) => {
     })
 })
 
-app.get('/report',(req,res)=>{
-    req.send()
-})
 
 // Report bin
 app.post('/report', (req, res) => {
-    let { user_report, lat, lng, description = null,category,header = null } = req.body;
-    let command = `INSERT INTO report (user_report,lat,lng,description,category,header) 
-                    VALUE(?,?,?,?,?,?) `; 
-    conn.query(command, [user_report, lat, lng, ], (err, result) => {
-        if (err) throw err; else {
+    let { user_report, description = null, category, header, bin } = req.body;
+    let commandSearch = `Select * form report where  bin = ? and category = ?`
+    let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?) `;
+    conn.query(commandSearch, [bin, category], (err, result) => {
+        if (err) throw err;
+        else if (result.length !== 0) { res.send({ error: true, massage: "this report has in database" }) }
+        else {
+            conn.query(commandAdd, [], (err, result) => {
+                if (err) throw err;
+                else {
+                    res.send({
+                        error: false,
+                        massage: "add report success",
+                        result: result
+                    })
+                }
+            })
+        }
+    })
+})
+
+
+// it normal report 
+app.get('/appReport', (req, res) => {
+    let command = `select * from app_report;`;
+    conn.query(command, (err, result) => {
+        if (err) throw err; else if (result.length === 0) {
+            res.status(404).send({
+                error: true, message: "haven't report now"
+            })
+        } else if (result.length == 0) { res.status(404).send({ error: true, massage: "app report not found " }) }
+        else {
             res.send({
-                error: false, message: "report bin complete", result: result
+                error: false, message: "search report complete", response: result
+            })
+        }
+    })
+})
+
+app.get('/appReport/:id', (req, res) => {
+    let id = req.params.id;
+    let command = `select * from app_report WHERE id = ?;`;
+    conn.query(command, [id], (err, result) => {
+        if (err) throw err; else if (result.length === 0) {
+            res.status(404).send({
+                error: true, message: "haven't report now"
+            })
+        } else if (result.length == 0) { res.status(404).send({ error: true, massage: "app report not found " }) }
+        else {
+            res.send({
+                error: false, message: "search report complete", response: result
             })
         }
     })
