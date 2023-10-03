@@ -36,6 +36,16 @@ export default function Home() {
   
   const [currentLocation, setCurrentLocation] = useState(defaultCenter); // Initialize with default center
   
+  const setcurrentLocation = (location) => {
+    setCurrentLocation(prevLocation => {
+      // Use the previous state to ensure that the state is always up-to-date
+      const newLocation = location || defaultCenter; // Use defaultCenter if location is not provided
+      console.log(newLocation);
+      return newLocation;
+    });
+  };
+  
+
   const addMarkerToMap = () => {
     setcurrentLocation()
     console.log(currentLocation);
@@ -47,10 +57,6 @@ export default function Home() {
     console.log(markers); // Log the updated markers array
   };
 
-  const setcurrentLocation = (location) => {
-    setCurrentLocation(location); // Set the current location in state
-    console.log(markers);
-  }
 
   const gotoeditbinpage = () => {
     window.location.href = '/editbin';
@@ -69,9 +75,6 @@ export default function Home() {
       
       <div className={`sidebar-dim ${isSidebarOpen ? "open" : ""}`} onClick={toggleSidebar}></div>
       
-      <div className="home-topbar">
-        <Topbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      </div>
 
       <div className={`home-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         {isSidebarOpen && <Sidebar isSidebarOpen={isSidebarOpen} />}
@@ -97,8 +100,12 @@ export default function Home() {
         onClick={toggleBinDetail}
       ></div>
 
-      {/* <div className='home-searchbar'>
-        <SearchBar />
+      <div className="home-topbar sm:w-full md:w-1/3">
+        <Topbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} onLocationClick={setcurrentLocation}/>
+      </div>
+
+      {/* <div className='home-searchbar sm:w-full md:w-1/3'>
+        <SearchBar onLocationClick={setcurrentLocation}/>
       </div> */}
 
       {/* DevMode */}

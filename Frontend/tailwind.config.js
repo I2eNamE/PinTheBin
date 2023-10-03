@@ -20,7 +20,8 @@ module.exports = {
       '00ab15': '#00AB15',
       'dd3327': '#DD3327',
       '39da00': '#39DA00',
-      'ff5151': '#FF5151'
+      'ff5151': '#FF5151',
+      'e0e0e0': '#E0E0E0',
     },
     extend: {
       backgroundImage: {

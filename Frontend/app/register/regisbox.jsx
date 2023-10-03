@@ -5,14 +5,14 @@ export const RegisterBox = () => {
   return (
     <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 m-3 font-NotoSansThai font-medium'>
       <div className="flex items-center justify-between mb-3">
-        <a href="/"> <button className="text-xl text-gray-600 focus:outline-none hover:scale-110 transition-all">
+        <a href="/"> <button className="text-xl  focus:outline-none hover:scale-110 transition-all">
           <IoMdArrowRoundBack size={40} /></button></a>
         <h2 className="text-3xl">สร้างบัญชีใหม่</h2>
         <div className="w-8"></div> {/* Add an empty div for spacing */}
       </div>
       <form>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-xl text-gray-600">ชื่อ</label>
+          <label htmlFor="name" className="block text-xl ">ชื่อ</label>
           <input
             type="text"
             id="name"
@@ -22,7 +22,7 @@ export const RegisterBox = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-xl text-gray-600">อีเมล</label>
+          <label htmlFor="email" className="block text-xl ">อีเมล</label>
           <input
             type="email"
             id="email"
@@ -32,7 +32,7 @@ export const RegisterBox = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="password" className="block text-xl text-gray-600">รหัสผ่าน</label>
+          <label htmlFor="password" className="block text-xl ">รหัสผ่าน</label>
           <input
             type="password"
             id="password"
@@ -42,7 +42,7 @@ export const RegisterBox = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="confirmPassword" className="block text-xl text-gray-600">ยืนยันรหัสผ่าน</label>
+          <label htmlFor="confirmPassword" className="block text-xl ">ยืนยันรหัสผ่าน</label>
           <input
             type="password"
             id="confirmPassword"

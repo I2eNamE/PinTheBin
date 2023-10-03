@@ -1,5 +1,14 @@
-.home-topbar {
-  z-index: 1;
+@media screen and (max-width: 768px) {
+  .home-topbar {
+    z-index: 1;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .home-topbar {
+    position: fixed;
+    z-index: 1;
+  }
 }
 
 .home-sidebar {
@@ -10,10 +19,31 @@
   height: 100%;
   background-color: #f4f4f4;
   transition: all 0.3s ease-in-out;
-  z-index: 1;
+  z-index: 2;
   border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;
 }
+
+/* Add these styles to style.css */
+
+.home-searchbar.slide-down {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  transition: transform 0.5s ease-in-out;
+  transform: translateY(0);
+}
+
+.home-searchbar.slide-up {
+  transform: translateY(-100%);
+}
+
+.searchitem {
+  transition: transform 0.3s ease-in-out; /* Add a transition for smooth animation */
+}
+
 
 .sidebar {
   border-top-right-radius: 1.5rem;
@@ -40,7 +70,7 @@ height: 100%; */
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 2;
   display: none;
   background-color: black;
 }

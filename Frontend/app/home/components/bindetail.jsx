@@ -4,6 +4,7 @@ import { MdPinDrop, MdInfo } from "react-icons/md";
 import { bindetaildata } from "../data/bindetaildata";
 import { BsChevronCompactDown } from "react-icons/bs";
 import BinTypes from "./bintype";
+import React, { useState } from "react";
 import '../components/style.css'
 
 const formatDate = (timestamp) => {
@@ -22,6 +23,12 @@ const formatDate = (timestamp) => {
 export const BinDetail = ({ onClose }) => {
     // Assuming there's only one item in bindetaildata array
     const binData = bindetaildata[0];
+
+    const [reviews, setReviews] = useState([
+        { id: 1, user: "John Doe", comment: "Great bin!" },
+        { id: 2, user: "Jane Smith", comment: "Could be cleaner." },
+    ]);
+
 
     return (
         <div className="bin-detail-overlay">
@@ -69,6 +76,18 @@ export const BinDetail = ({ onClose }) => {
                         <p className="flex justify-center text-base font-thin pl-2 mt-5">
                             แก้ไขล่าสุดเมื่อ {formatDate(binData.timestamp)}
                         </p>
+
+
+                        {/* <div className="flex justify-start items-center mt-2">
+                            <MdInfo size={30} color="#505050" />
+                            <p className="text-2xl font-medium pl-2">รีวิวจากผู้ใช้</p>
+                        </div>
+                        {reviews.map((review) => (
+                            <div key={review.id} className="user-review mt-2 ml-5 mr-5 mb-5">
+                                <p className="font-medium">{review.user}:</p>
+                                <p className="font-normal">{review.comment}</p>
+                            </div>
+                        ))} */}
                     </div>
                 </div>
             </div>
