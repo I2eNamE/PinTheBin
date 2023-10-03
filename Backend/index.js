@@ -202,7 +202,7 @@ app.patch('/bin', (req, res) => {
 
 // end bin info and start report tablea
 app.get('/report', (req, res) => {
-    let command = `SELECT report.id ,report.report_date , user_info.name, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
+    let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
                     from (( report inner join bin_info on report.bin = bin_info.id)
                    inner join user_info on report.user_report = user_info.id);`;
     conn.query(command, (err, result) => {
@@ -220,9 +220,9 @@ app.get('/report', (req, res) => {
 
 app.get('/report/:id', (req, res) => {
     let id = req.params.id;
-    let command = `SELECT report.id ,report.report_date , user_info.name, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
+    let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
     from (( report inner join bin_info on report.bin = bin_info.id)
-                   inner join user_info on report.user_report = user_info.id) WHERE id= ?;`; // TODO: Sanitize sql query
+                   inner join user_info on report.user_report = user_info.id) WHERE report.id= ? ;`; // TODO: Sanitize sql query
     conn.query(command, [id], (err, result) => {
         if (err) throw err; else if (result.length === 0) {
             res.status(404).send({
