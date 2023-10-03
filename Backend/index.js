@@ -62,8 +62,8 @@ app.post('/user', (req, res) => {
         res.status(400).send({ error: true, message: "password mismatch" })
     } else {
         let commandAdd = `INSERT INTO user_info (email,name,password) VALUE(?, ?, ?);` // TODO: Sanitize sql query
-        let commanSearch = `SELECT * FROM user_info WHERE email= ?;`
-        conn.query(commanSearch, [email], (err, result) => {
+        let commandSearch = `SELECT * FROM user_info WHERE email= ?;`
+        conn.query(commandSearch, [email], (err, result) => {
             if (err) res.send(err); else if (result.length !== 0) {
                 res.status(400).send({
                     error: true, message: "this email has been register"
@@ -116,26 +116,31 @@ app.patch('/changepassword', (req, res) => {
     let { id, oldPassword, newPassword, passwordAgain } = req.body;
     let commandSearch = `SELECT password FROM user_info where id = ?`;
     let commandUpdate = `UPDATE user_info SET password = ? WHERE id = ?`;
-    if (newPassword !== passwordAgain) 
-    { res.status(400).send({
-         error: true, 
-         massage: "password not match" 
-        }) }
+    if (newPassword !== passwordAgain) {
+        res.status(400).send({
+            error: true,
+            massage: "password not match"
+        })
+    }
     conn.query(commandSearch, [id], (err, result) => {
         if (err) throw err;
-        else if (result.length == 0 || result[0].password !== oldPassword)
-         { res.status.send({
-             error: true, 
-             massage: "can not find old password or old password not correct" }
-             ) }
+        else if (result.length == 0 || result[0].password !== oldPassword) {
+            res.status.send({
+                error: true,
+                massage: "can not find old password or old password not correct"
+            }
+            )
+        }
         else {
-            conn.query(commandUpdate,[newPassword,id],(err,result)=>{
+            conn.query(commandUpdate, [newPassword, id], (err, result) => {
                 if (err) throw err;
-                else{res.send({
-                    error:false,
-                    massage:"update password",
-                    result:result
-                })}
+                else {
+                    res.send({
+                        error: false,
+                        massage: "update password",
+                        result: result
+                    })
+                }
             })
         }
     })
@@ -291,7 +296,32 @@ app.get('/appReport/:id', (req, res) => {
     })
 })
 
-
+app.post('/appReport', (req, res) => {
+    let { header, category, description = null, user } = req.body;
+    let commandSearch = `SELECT * FROM app_report WHERE category = ? and user = ? ;`;
+    let commandAdd = `INSERT INTO app_report(header,category,description,user) VALUES (?,?,?,?)`;
+    conn.query(commandSearch, [category, user], (err, result) => {
+        if (err) throw err;
+        else if (result.length !== 0) {
+            res.status(404).send({
+                error: true,
+                massage: "this report has been in database"
+            })
+        }
+        else {
+            conn.query(commandAdd, [header, category, description, user], (err, result) => {
+                if (err) throw err;
+                else {
+                    res.status(201).send({
+                        error: false,
+                        massage: "add report complete",
+                        result: result
+                    })
+                }
+            })
+        }
+    })
+})
 
 
 app.listen(port, () => {
