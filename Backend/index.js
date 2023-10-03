@@ -59,7 +59,7 @@ app.get('/user/:id', (req, res) => {
 app.post('/user', (req, res) => {
     let { email, name, password, passwordAgain } = req.body;
     if (password !== passwordAgain) {
-        res.status(400).send({ error: true, message: "password mismatch" })
+        return res.status(400).send({ error: true, message: "password mismatch" })
     } else {
         let commandAdd = `INSERT INTO user_info (email,name,password) VALUE(?, ?, ?);` // TODO: Sanitize sql query
         let commandSearch = `SELECT * FROM user_info WHERE email= ?;`
@@ -117,19 +117,18 @@ app.patch('/changepassword', (req, res) => {
     let commandSearch = `SELECT password FROM user_info where id = ?`;
     let commandUpdate = `UPDATE user_info SET password = ? WHERE id = ?`;
     if (newPassword !== passwordAgain) {
-        res.status(400).send({
+        return res.status(400).send({
             error: true,
-            massage: "password not match"
+            massage: "password miss match"
         })
     }
     conn.query(commandSearch, [id], (err, result) => {
         if (err) throw err;
-        else if (result.length == 0 || result[0].password !== oldPassword) {
-            res.status.send({
+        else if (result.length == 0 || result[0].password != oldPassword) {
+            res.send({
                 error: true,
-                massage: "can not find old password or old password not correct"
-            }
-            )
+                massage: "can not find old password or old password not correct",
+            })
         }
         else {
             conn.query(commandUpdate, [newPassword, id], (err, result) => {
