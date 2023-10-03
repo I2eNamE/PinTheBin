@@ -284,7 +284,7 @@ app.get('/appReport/:id', (req, res) => {
     conn.query(command, [id], (err, result) => {
         if (err) throw err; else if (result.length === 0) {
             res.status(404).send({
-                error: true, message: "haven't report now"
+                error: true, message: `haven't report id ${id} now`
             })
         } else if (result.length == 0) { res.status(404).send({ error: true, massage: "app report not found " }) }
         else {
