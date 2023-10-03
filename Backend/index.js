@@ -240,13 +240,13 @@ app.get('/report/:id', (req, res) => {
 // Report bin
 app.post('/report', (req, res) => {
     let { user_report, description = null, category, header, bin } = req.body;
-    let commandSearch = `Select * form report where  bin = ? and category = ?`
-    let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?) `;
+    let commandSearch = `Select * from report where  bin = ? and category = ? ;`
+    let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?);`;
     conn.query(commandSearch, [bin, category], (err, result) => {
         if (err) throw err;
         else if (result.length !== 0) { res.send({ error: true, massage: "this report has in database" }) }
         else {
-            conn.query(commandAdd, [], (err, result) => {
+            conn.query(commandAdd, [user_report,description,category,header,bin], (err, result) => {
                 if (err) throw err;
                 else {
                     res.send({
