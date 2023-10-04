@@ -27,6 +27,7 @@ export default function Addbin() {
   };
 
   const addMarkerToMap = (name, location, binTypes) => {
+    console.log(binTypes)
     axios.post(url+'bin', {
       location: 'ทดสอบชื่อสถานที่',
       lat: location.lat,
