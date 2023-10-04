@@ -3,12 +3,12 @@ import mysql from 'mysql';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import sessions from 'express-session';
+import cookieParser from "cookie-parser";
 import 'dotenv/config'
 
 const app = express();
 const port = 8080
-
-
 
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(sessions({
@@ -22,13 +22,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
+
+// control 401 give web redirecto to /login page 
 app.use((req, res, next) => {
-    if (!req.session.userid) {
-      // Redirect to the login page if the user is not authenticated
-      return res.redirect('/login');
+    if (!req.session.userid && req.path !== "/login") {
+        // Redirect to the login page if the user is not authenticated
+        res.status(401).send({ error: true, message: "Unauthorized" });
     }
     next(); // Proceed to the next middleware or route
-  });
+});
 
 
 // create connection_data to database
@@ -126,10 +128,11 @@ app.post('/picture', (req, res) => {
 
 app.post('/login', (req, res) => {
     let { email, password } = req.body;
-    let command = `SELECT * FROM user_info WHERE email = ?`; // TODO: Sanitize sql query
+    let command = `SELECT password FROM user_info WHERE email = ?`;
     conn.query(command, [email], (err, result) => {
         if (err) throw err; else if (result.length === 1 && result[0].password === password) {
-            res.send({ error: false, message: "password correct welcome!", result: result })
+            req.session.userid = email;
+            res.send({ error: false, message: "password correct welcome!"})
         } else {
             res.status(404).send({ error: true, message: "email or password is incorrect try again!" })
         }
@@ -168,6 +171,9 @@ app.patch('/changepassword', (req, res) => {
         }
     })
 })
+
+
+
 
 // end user_info table and start bin_info table
 
@@ -224,6 +230,9 @@ app.patch('/bin', (req, res) => {
 })
 
 
+
+
+
 // end bin info and start report tablea
 app.get('/report', (req, res) => {
     let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
@@ -270,7 +279,7 @@ app.post('/report', (req, res) => {
         if (err) throw err;
         else if (result.length !== 0) { res.send({ error: true, massage: "this report has in database" }) }
         else {
-            conn.query(commandAdd, [user_report,description,category,header,bin], (err, result) => {
+            conn.query(commandAdd, [user_report, description, category, header, bin], (err, result) => {
                 if (err) throw err;
                 else {
                     res.send({
@@ -283,6 +292,8 @@ app.post('/report', (req, res) => {
         }
     })
 })
+
+
 
 
 // it normal report 
@@ -345,6 +356,7 @@ app.post('/appReport', (req, res) => {
         }
     })
 })
+
 
 
 app.listen(port, () => {
