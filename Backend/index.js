@@ -235,17 +235,51 @@ app.post('/bin', (req, res) => {
   });
   
 
-app.patch('/bin', (req, res) => {
-    let { location, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
+  app.patch('/bin', (req, res) => {
+    let { location, lat, lng, description = null, picture = null, binType } = req.body;
+    // console.log(binType);
+  
+    // Initialize bin types
+    const binTypes = {
+      red_bin: false,
+      green_bin: false,
+      yellow_bin: false,
+      blue_bin: false,
+    };
+  
+    // Set bin types based on the received array
+    binType.forEach((type) => {
+      binTypes[`${type.toLowerCase()}`] = true;
+    });
+  
     let command = `UPDATE bin_info 
-                    SET location = ?, description = ?,red_bin = ?,
-                    green_bin = ?,yellow_bin = ?,blue_bin = ?,picture = ?  WHERE lat = ? and lng = ? ;`;
-    conn.query(command, [location, description, red_bin, green_bin, yellow_bin, blue_bin, picture, lat ,lng], (err, result) => {
-        if (err) throw err; else {
-            res.send({ error: false, massage: "update bin complete", result: result })
-        }
-    })
-})
+                  SET location = ?, description = ?, red_bin = ?,
+                  green_bin = ?, yellow_bin = ?, blue_bin = ?, picture = ?
+                  WHERE lat = ? AND lng = ?;`;
+  
+    const values = [
+      location,
+      description,
+      binTypes.red_bin,
+      binTypes.green_bin,
+      binTypes.yellow_bin,
+      binTypes.blue_bin,
+      picture,
+      lat,
+      lng,
+    ];
+  
+    conn.query(command, values, (err, result) => {
+      if (err) {
+        throw err;
+      } else {
+        res.send({ error: false, message: "Update bin complete", result: result });
+      }
+    });
+  });
+  
+  
+
 
 app.delete("/bin/:id",(re,res)=>{
     let id = req.params.id;

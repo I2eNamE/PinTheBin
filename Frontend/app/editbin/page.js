@@ -9,6 +9,7 @@ import { getCurrentLocation } from '../home/utils/getcurrentlocation';
 import { ConfirmDelete } from './components/confirmdelete';
 import { markerdata as markers } from '../home/data/markerdata';
 import './components/style.css';
+import axios from 'axios';
 
 export default function EditBin() {
   const [buttonStates, setButtonStates] = useState(null);
@@ -16,18 +17,37 @@ export default function EditBin() {
   const [isConfirmDeleteVisible, setIsConfirmDeleteVisible] = useState(false);
   const [markerName, setMarkerName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
+  const [binTypes, setBinTypes] = useState([]);
 
+  let url = 'http://localhost:8080/';
+  
   const handleCancelDelete = () => {
     setIsConfirmDeleteVisible(false);
   };
 
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);
+    const activeBinTypes = Object.keys(newButtonStates).filter(
+      (binType) => newButtonStates[binType].active
+    );
+    setBinTypes(activeBinTypes);
   };
 
-  const editMarkerOnMap = (name, location, buttonStates) => {
-    // Your logic to edit the marker on the map goes here
-    console.log('Editing marker on the map:', name, location, buttonStates);
+  const editMarkerOnMap = (name, location, binTypes) => {
+    console.log(binTypes)
+    axios.patch(url+'bin', {
+      location: 'ทดสอบเปลี่ยนชื่อสถานที่',
+      lat: location.lat,
+      lng: location.lng,
+      binType: binTypes,
+      description: name,
+    }).then((response) => {
+      console.log(response);
+    }
+    ).catch((error) => {
+      console.log(error);
+    }
+    );
   };
 
   const deleteMarkerOnMap = () => {
@@ -48,16 +68,16 @@ export default function EditBin() {
     );
   };
 
-  const handleButtonClick = (buttonName) => {
-    const newButtonStates = {
-      ...buttonStates,
-      [buttonName]: {
-        ...buttonStates[buttonName],
-        active: !buttonStates[buttonName].active,
-      },
-    };
-    handleButtonStateChange(newButtonStates);
-  };
+  // const handleButtonClick = (buttonName) => {
+  //   const newButtonStates = {
+  //     ...buttonStates,
+  //     [buttonName]: {
+  //       ...buttonStates[buttonName],
+  //       active: !buttonStates[buttonName].active,
+  //     },
+  //   };
+  //   handleButtonStateChange(newButtonStates);
+  // };
 
   const buttonContent = isButtonClicked ? (
     <>
@@ -157,10 +177,10 @@ export default function EditBin() {
           </div>
         </div>
         <div className="mt-4 flex justify-center">
-          <a href="/home" className='mt-4 flex justify-center'>
+          {/* <a href="/home" className='mt-4 flex justify-center'> */}
             <button
               onClick={() => {
-                editMarkerOnMap(markerName, locationValue, buttonStates);
+                editMarkerOnMap(markerName, locationValue, binTypes);
                 setLocationValue({ lat: 0, lng: 0 });
                 setIsButtonClicked(true)
               }}
@@ -170,7 +190,7 @@ export default function EditBin() {
             >
               {buttonContent}
             </button>
-          </a>
+          {/* </a> */}
         </div>
       </div>
       <div className={`dim ${isConfirmDeleteVisible ? 'open' : ''}`} onClick={handleCancelDelete}></div>

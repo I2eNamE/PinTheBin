@@ -19,7 +19,6 @@ export default function Addbin() {
   
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);
-    // Extract bin types from buttonStates and set it in the state
     const activeBinTypes = Object.keys(newButtonStates).filter(
       (binType) => newButtonStates[binType].active
     );
