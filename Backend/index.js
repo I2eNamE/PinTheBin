@@ -236,11 +236,11 @@ app.post('/bin', (req, res) => {
   
 
 app.patch('/bin', (req, res) => {
-    let { location,id, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
+    let { location, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
     let command = `UPDATE bin_info 
-                    SET location = ?,lat = ?, lng = ?, description = ?,red_bin = ?,
-                    green_bin = ?,yellow_bin = ?,blue_bin = ?,picture = ?  WHERE id = ?;`;
-    conn.query(command, [location, lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin, picture, id], (err, result) => {
+                    SET location = ?, description = ?,red_bin = ?,
+                    green_bin = ?,yellow_bin = ?,blue_bin = ?,picture = ?  WHERE lat = ? and lng = ? ;`;
+    conn.query(command, [location, description, red_bin, green_bin, yellow_bin, blue_bin, picture, lat ,lng], (err, result) => {
         if (err) throw err; else {
             res.send({ error: false, massage: "update bin complete", result: result })
         }
