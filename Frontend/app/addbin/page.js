@@ -6,25 +6,48 @@ import { BsFillPinMapFill } from 'react-icons/bs';
 import { ToggleButtons } from '../addbin/components/bintype';
 import { getCurrentLocation } from '../home/utils/getcurrentlocation';
 import { markerdata as markers } from '../home/data/markerdata';
+import axios from "axios";
 
 export default function Addbin() {
   const [buttonStates, setButtonStates] = useState(null);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [markerName, setMarkerName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
+  const [binTypes, setBinTypes] = useState([]);
 
+  let url = 'http://localhost:8080/';
+  
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);
+    // Extract bin types from buttonStates and set it in the state
+    const activeBinTypes = Object.keys(newButtonStates).filter(
+      (binType) => newButtonStates[binType].active
+    );
+    setBinTypes(activeBinTypes);
   };
 
-  const addMarkerToMap = (name, location, buttonStates) => {
-    markers.push({
-      id: markers.length + 1,
-      name: name,
-      position: location,
-      ...buttonStates,
-    });
-    console.log(markers);
+  const addMarkerToMap = (name, location, binTypes) => {
+    axios.post(url+'bin', {
+      location: 'ทดสอบชื่อสถานที่',
+      lat: location.lat,
+      lng: location.lng,
+      binType: binTypes,
+      description: name,
+    }).then((response) => {
+      console.log(response);
+    }
+    ).catch((error) => {
+      console.log(error);
+    }
+    );
+    // markers.push({
+    //   id: markers.length + 1,
+    //   description: name,
+    //   lng: location.lng,
+    //   lat: location.lat,
+    //   binType: binTypes,
+    // });
+    // console.log(markers);
   };
 
   // Function to get the user's location
@@ -144,10 +167,10 @@ export default function Addbin() {
         </div>
       </div>
       <div className="mt-4 flex justify-center">
-        <a href="/home">
+        {/* <a href="/home"> */}
           <button
             onClick={() => {
-              addMarkerToMap(markerName, locationValue, buttonStates);
+              addMarkerToMap(markerName, locationValue, binTypes);
               setLocationValue({ lat: 0, lng: 0 });
               setIsButtonClicked(true)
             }}
@@ -157,7 +180,7 @@ export default function Addbin() {
           >
             {buttonContent}
           </button>
-        </a>
+        {/* </a> */}
       </div>
     </div>
   );

@@ -6,14 +6,14 @@ import './style.css'
 export const SearchBar = ({ onLocationClick }) => {
   const handleLocationClick = () => {
     // Get the location data from bindetaildata (assuming it's the first item)
-    const locationData = bindetaildata[0];
+    const locationData = bindetaildata[1];
 
     // Call the provided callback
     onLocationClick(locationData.position);
     
   };
   // Assuming there's only one item in bindetaildata array
-  const binData = bindetaildata[0];
+  const binData = bindetaildata[1];
 
   // Map bin types to their respective icons
   const binTypeIcons = {

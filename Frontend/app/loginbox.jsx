@@ -7,16 +7,18 @@ import { useState } from "react";
 export const LoginBox = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  let url = 'https://tapanawat.myftp.org:8080/';
 
   const handleLogin = () => {
-    axios.post("http://tapanawat.myftp.org:8080/login", {
+    axios.post(url+'login', {
       email: email,
       password: password,
     }).then((response) => {
-      console.log(response.data);
-      // if(response.data.status == 200){
-      //   window.location.href = "/home";
-      // }
+      // console.log(response.data);
+      console.log(response);
+      if(response.status == 200){
+        window.location.href = "/home";
+      }
     }
     ).catch((error) => {
       console.log(error);

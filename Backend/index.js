@@ -25,13 +25,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 // control 401 give web redirecto to /login page 
-app.use((req, res, next) => {
-    if (!req.session.userid && req.path !== "/login") {
-        // Redirect to the login page if the user is not authenticated
-        res.status(401).send({ error: true, message: "Unauthorized" });
-    }
-    next(); // Proceed to the next middleware or route
-});
+// app.use((req, res, next) => {
+//     if (!req.session.userid && req.path !== "/login") {
+//         // Redirect to the login page if the user is not authenticated
+//         res.status(401).send({ error: true, message: "Unauthorized" });
+//     }
+//     next(); // Proceed to the next middleware or route
+// });
 
 
 // create connection_data to database
@@ -197,25 +197,43 @@ app.get("/bin/:id", (req, res) => {
 })
 
 app.post('/bin', (req, res) => {
-    let { lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
+    let { location, lat, lng, description = null, picture = null, binType } = req.body;
+  
     let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;
-    let commandAdd = `INSERT INTO bin_info (lat,lng,description,red_bin,green_bin,yellow_bin,blue_bin,picture) VALUE
-                    (?,?,?,?,?,?,?,?)`;
+    let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  
     conn.query(commandSearch, [lat, lng], (err, result) => {
-        if (err) throw err; else if (result.length !== 0) {
-            res.send({ error: true, message: "bin have been add in database" })
-        } else {
-            conn.query(commandAdd, [lat, lng, description, red_bin, green_bin, yellow_bin, blue_bin, picture], (err, result) => {
-                if (err) throw err; else {
-                    res.status(201).send({
-                        error: false, message: "add bin success", result: result
-                    })
-                }
-            })
-        }
-    })
-
-})
+      if (err) {
+        throw err;
+      } else if (result.length !== 0) {
+        res.send({ error: true, message: "Bin has already been added to the database." });
+      } else {
+        // Initialize bin types
+        const binTypes = {
+          red_bin: false,
+          green_bin: false,
+          yellow_bin: false,
+          blue_bin: false,
+        };
+  
+        // Set bin types based on the received array
+        binType.forEach((type) => {
+          binTypes[type.toLowerCase()] = true;
+        });
+  
+        const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
+  
+        conn.query(commandAdd, values, (err, result) => {
+          if (err) {
+            throw err;
+          } else {
+            res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
+          }
+        });
+      }
+    });
+  });
+  
 
 app.patch('/bin', (req, res) => {
     let { location,id, lat, lng, description = null, red_bin, green_bin, yellow_bin, blue_bin, picture = null } = req.body;
