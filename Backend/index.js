@@ -5,6 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import sessions from 'express-session';
 import cookieParser from "cookie-parser";
+import https from 'https';
 import 'dotenv/config'
 
 const app = express();
@@ -132,7 +133,7 @@ app.post('/login', (req, res) => {
     conn.query(command, [email], (err, result) => {
         if (err) throw err; else if (result.length === 1 && result[0].password === password) {
             req.session.userid = email;
-            res.send({ error: false, message: "password correct welcome!"})
+            res.send({ error: false, message: "password correct welcome!" })
         } else {
             res.status(404).send({ error: true, message: "email or password is incorrect try again!" })
         }
@@ -229,6 +230,19 @@ app.patch('/bin', (req, res) => {
     })
 })
 
+app.delete("/bin/:id",(re,res)=>{
+    let id = req.params.id;
+    let command = `DELETE FROM bin_info WHERE id = ?`;
+    conn.query(command,[id],(err,result)=>{
+        if (err) throw err 
+        else{
+            res.send({
+                error:false,
+            })
+        }
+    })
+})
+
 
 
 
@@ -251,6 +265,8 @@ app.get('/report', (req, res) => {
     })
 })
 
+
+// what is id report id , user id  ??
 app.get('/report/:id', (req, res) => {
     let id = req.params.id;
     let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
