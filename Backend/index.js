@@ -8,9 +8,27 @@ import 'dotenv/config'
 const app = express();
 const port = 8080
 
+
+
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    secret: "SecretkeyPinTheBin",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}));
+app.use(cookieParser());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use((req, res, next) => {
+    if (!req.session.userid) {
+      // Redirect to the login page if the user is not authenticated
+      return res.redirect('/login');
+    }
+    next(); // Proceed to the next middleware or route
+  });
 
 
 // create connection_data to database
@@ -33,6 +51,12 @@ conn.connect(function (err) {
 app.get('/test', (req, res) => {
     res.send("Hello world");
 })
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 
 
 // start user_info table 
