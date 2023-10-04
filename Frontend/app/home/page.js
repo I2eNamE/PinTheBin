@@ -13,6 +13,9 @@ import { SearchBar } from './components/searchbar';
 import "./components/style.css";
 
 export default function Home() {
+  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+  const [selectedBinData, setSelectedBinData] = useState(null);
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_googleMapsApiKey
@@ -24,8 +27,12 @@ export default function Home() {
   };
 
   const [isBinDetailVisible, setIsBinDetailVisible] = useState(false);
-  const toggleBinDetail = () => {
-    setIsBinDetailVisible(!isBinDetailVisible);
+
+  const toggleBinDetail = (markerId) => {
+    console.log(markerId);
+    // setIsBinDetailVisible(!isBinDetailVisible);
+    // console.log('Toggle Bin Detail')
+    setSelectedMarkerId(markerId);
   };
 
   // Set current location in state
@@ -70,7 +77,8 @@ export default function Home() {
   return (
     <div>
       <div className="map-container">
-        {isLoaded && <Map center={currentLocation} />}
+        {isLoaded && <Map center={currentLocation} onMarkerClick={toggleBinDetail} />}
+
       </div>
       
       <div className={`sidebar-dim ${isSidebarOpen ? "open" : ""}`} onClick={toggleSidebar}></div>
@@ -80,9 +88,11 @@ export default function Home() {
         {isSidebarOpen && <Sidebar isSidebarOpen={isSidebarOpen} />}
       </div>
 
-      <div className={`home-bindetail ${isBinDetailVisible ? 'open' : ''}`}>
-        <BinDetail onClose={toggleBinDetail} />
-      </div>
+      {selectedMarkerId !== null && (
+        <div className="home-bindetail open">
+          <BinDetail onClose={() => setSelectedMarkerId(null)} markerId={selectedMarkerId} />
+        </div>
+      )}
 
       <div className="home-addbinbtn absolute bottom-5 right-5">
         <div className="flex flex-col">

@@ -1,34 +1,46 @@
 import { MdFlag } from "react-icons/md";
 import { BiSolidPencil } from "react-icons/bi";
 import { MdPinDrop, MdInfo } from "react-icons/md";
-import { bindetaildata } from "../data/bindetaildata";
 import { BsChevronCompactDown } from "react-icons/bs";
 import BinTypes from "./bintype";
-import React, { useState } from "react";
-import '../components/style.css'
+import React, { useState, useEffect } from "react";
+import '../components/style.css';
 
 const formatDate = (timestamp) => {
     const options = {
-      timeZone: 'Asia/Bangkok',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
+        timeZone: 'Asia/Bangkok',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
     };
     const formattedDate = new Date(timestamp).toLocaleString('en-GB', options);
     return formattedDate;
-  };
+};
 
-export const BinDetail = ({ onClose }) => {
-    // Assuming there's only one item in bindetaildata array
-    const binData = bindetaildata[0];
+export const BinDetail = ({ onClose, markerId }) => {
+    const [binData, setBinData] = useState(null);
+    
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await fetch(`http://localhost:8080/bin/${markerId}`);
+            const data = await response.json();
+            setBinData(data.response[0]);
+          } catch (error) {
+            console.error('Error fetching bin details:', error);
+            setBinData(null);
+          }
+        };
+    
+        fetchData();
+      }, [markerId]);
 
-    const [reviews, setReviews] = useState([
-        { id: 1, user: "John Doe", comment: "Great bin!" },
-        { id: 2, user: "Jane Smith", comment: "Could be cleaner." },
-    ]);
-
+    if (binData === null) {
+        // Handle loading state or error state
+        return <p>Loading bin details...</p>; // You can customize this based on your needs
+    }
 
     return (
         <div className="bin-detail-overlay">
@@ -38,11 +50,11 @@ export const BinDetail = ({ onClose }) => {
                         <BsChevronCompactDown size={50} color="#505050" />
                     </div>
                     <div className="bg-ffffff rounded-xl m-3">
-                        <img
-                            src={binData.picture}
-                            alt="Background"
-                            className="rounded-xl w-full h-full object-cover"
-                        />
+                        {/* <img
+              src={binData.picture}
+              alt="Background"
+              className="rounded-xl w-full h-full object-cover"
+            /> */}
                     </div>
                     <div className="bg-ffffff rounded-xl p-4 m-3">
                         <div className="flex justify-end">
@@ -76,18 +88,6 @@ export const BinDetail = ({ onClose }) => {
                         <p className="flex justify-center text-base font-thin pl-2 mt-5">
                             แก้ไขล่าสุดเมื่อ {formatDate(binData.timestamp)}
                         </p>
-
-
-                        {/* <div className="flex justify-start items-center mt-2">
-                            <MdInfo size={30} color="#505050" />
-                            <p className="text-2xl font-medium pl-2">รีวิวจากผู้ใช้</p>
-                        </div>
-                        {reviews.map((review) => (
-                            <div key={review.id} className="user-review mt-2 ml-5 mr-5 mb-5">
-                                <p className="font-medium">{review.user}:</p>
-                                <p className="font-normal">{review.comment}</p>
-                            </div>
-                        ))} */}
                     </div>
                 </div>
             </div>

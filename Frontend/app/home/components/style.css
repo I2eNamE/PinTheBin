@@ -86,7 +86,7 @@ height: 100%; */
     position: fixed;
     bottom: -100%;
     transition: all 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 3;
   }
 }
 
@@ -96,7 +96,7 @@ height: 100%; */
     bottom: -100%;
     left: 37.5%;
     transition: all 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 3;
   }
 }
 
@@ -104,7 +104,7 @@ height: 100%; */
 .home-bindetail.open {
   display: block;
   bottom: -5%;
-  z-index: 2;
+  z-index: 3;
   transition: all 0.3s ease-in-out;
 }
 
