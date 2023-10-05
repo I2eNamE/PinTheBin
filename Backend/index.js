@@ -237,7 +237,6 @@ app.post('/bin', (req, res) => {
     });
   });
   
-
   app.patch('/bin', (req, res) => {
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
     // console.log(binType);
@@ -281,17 +280,15 @@ app.post('/bin', (req, res) => {
     });
   });
   
-  
-
-
-app.delete("/bin/:id",(re,res)=>{
-    let id = req.params.id;
-    let command = `DELETE FROM bin_info WHERE id = ?`;
-    conn.query(command,[id],(err,result)=>{
+app.delete("/bin",(re,res)=>{
+    let {lat,lng} = req.params.id;
+    let commanddelete = `DELETE FROM bin_info WHERE lat = ? and lng = ?`;
+    conn.query(commanddelete,[lat,lng],(err,result)=>{
         if (err) throw err 
         else{
             res.send({
                 error:false,
+                result:result
             })
         }
     })
