@@ -17,22 +17,22 @@ const BinTypes = ({ bins }) => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="flex">
-        {binTypes.map((binType) => (
-          bins[binType.key] && (
-            <div key={binType.key} className="flex flex-col items-center justify-between rounded-lg shadow-lg p-2 m-2">
-              <img
-                src={bins[binType.key].active ? binTypeIcons[binType.key] : binTypeIcons[binType.key]}
-                alt={binType.title}
-                className="w-8 h-8"
-              />
-              <p className="text-sm mt-1">{binType.title}</p>
-            </div>
-          )
-        ))}
-      </div>
+    <div className="flex">
+      {binTypes.map((binType) => (
+        bins[binType.key] !== undefined && (
+          <div key={binType.key} className="flex flex-col items-center justify-between rounded-lg shadow-lg p-2 m-2">
+            <img
+              src={bins[binType.key] ? binTypeIcons[binType.key] : binTypeIcons[binType.key]}
+              alt={binType.title}
+              className="w-8 h-8"
+            />
+            <p className="text-sm mt-1">{binType.title}</p>
+          </div>
+        )
+      ))}
     </div>
-  );
+  </div>
+);
 };
 
 export default BinTypes;

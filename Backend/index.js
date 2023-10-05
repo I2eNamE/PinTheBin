@@ -209,7 +209,7 @@ app.post('/bin', (req, res) => {
       if (err) {
         throw err;
       } else if (result.length !== 0) {
-        res.send({ error: true, message: "Bin has already been added to the database." });
+        res.status(409).send({ error: true, message: "Bin has already been added to the database." });
       } else {
         // Initialize bin types
         const binTypes = {
@@ -280,10 +280,11 @@ app.post('/bin', (req, res) => {
     });
   });
   
-app.delete("/bin",(re,res)=>{
-    let {lat,lng} = req.params.id;
-    let commanddelete = `DELETE FROM bin_info WHERE lat = ? and lng = ?`;
-    conn.query(commanddelete,[lat,lng],(err,result)=>{
+
+app.delete("/bin/:id",(req,res)=>{
+    let id = req.params.id;
+    let command = `DELETE FROM bin_info WHERE id = ?`;
+    conn.query(command,[id],(err,result)=>{
         if (err) throw err 
         else{
             res.send({
@@ -293,8 +294,6 @@ app.delete("/bin",(re,res)=>{
         }
     })
 })
-
-
 
 
 

@@ -50,11 +50,11 @@ export const BinDetail = ({ onClose, markerId }) => {
                         <BsChevronCompactDown size={50} color="#505050" />
                     </div>
                     <div className="bg-ffffff rounded-xl m-3">
-                        {/* <img
+                        <img
               src={binData.picture}
               alt="Background"
               className="rounded-xl w-full h-full object-cover"
-            /> */}
+            />
                     </div>
                     <div className="bg-ffffff rounded-xl p-4 m-3">
                         <div className="flex justify-end">

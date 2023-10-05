@@ -14,6 +14,12 @@ export default function Addbin() {
   const [markerName, setMarkerName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
   const [binTypes, setBinTypes] = useState([]);
+  const [buttonContent, setButtonContent] = useState({
+    imgUrl: '',
+    bgColor: '',
+    message: '',
+  });
+  const [errorMessage, setErrorMessage] = useState(null);
 
   let url = 'http://localhost:8080/';
   
@@ -26,8 +32,7 @@ export default function Addbin() {
   };
 
   const addMarkerToMap = (name, location, binTypes) => {
-    console.log(binTypes)
-    axios.post(url+'bin', {
+    axios.post(url + 'bin', {
       location: 'ทดสอบชื่อสถานที่',
       lat: location.lat,
       lng: location.lng,
@@ -35,20 +40,25 @@ export default function Addbin() {
       description: name,
     }).then((response) => {
       console.log(response);
-    }
-    ).catch((error) => {
-      console.log(error);
-    }
-    );
-    // markers.push({
-    //   id: markers.length + 1,
-    //   description: name,
-    //   lng: location.lng,
-    //   lat: location.lat,
-    //   binType: binTypes,
-    // });
-    // console.log(markers);
+      if (response.status === 201) {
+        console.log('Bin added successfully.');
+        setButtonContent({
+          imgUrl: 'https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&',
+          bgColor: 'bg-39da00',
+          message: 'Bin added successfully.',
+        });
+      }
+    }).catch((error) => {
+      console.log('Error: Bin has already been added to the database.');
+      setButtonContent({
+        imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+        bgColor: 'bg-ff5151',
+        message: 'Bin has already been added to the database.',
+      });
+    });
   };
+  
+
 
   // Function to get the user's location
   const getLocation = () => {
@@ -64,29 +74,25 @@ export default function Addbin() {
     );
   };
 
-  const handleButtonClick = (buttonName) => {
-    // Use the onButtonStateChange function passed from props to update the parent state
+  const handleButtonClick = () => {
     const newButtonStates = {
       ...buttonStates,
-      [buttonName]: {
-        ...buttonStates[buttonName],
-        active: !buttonStates[buttonName].active,
-      },
+      // Update this based on your actual button states
     };
-    onButtonStateChange(newButtonStates);
+    handleButtonStateChange(newButtonStates);
   };
 
-  const buttonContent = isButtonClicked ? (
-    <>
-      <img
-        src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
-        alt="เพิ่มถังขยะ"
-        className="w-6 h-6 mr-2"
-      />
-    </>
-  ) : (
-    'เพิ่มถังขยะ'
-  );
+  // const buttonContent = isButtonClicked ? (
+  //   <>
+  //     <img
+  //       src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
+  //       alt="เพิ่มถังขยะ"
+  //       className="w-6 h-6 mr-2"
+  //     />
+  //   </>
+  // ) : (
+  //   'เพิ่มถังขยะ'
+  // );
   
   const handleFileChange = (e) => {
     // Handle file changes here if needed
@@ -166,21 +172,34 @@ export default function Addbin() {
           <ToggleButtons onButtonStateChange={handleButtonStateChange} />
         </div>
       </div>
-      <div className="mt-4 flex justify-center">
-        {/* <a href="/home"> */}
-          <button
-            onClick={() => {
-              addMarkerToMap(markerName, locationValue, binTypes);
-              setLocationValue({ lat: 0, lng: 0 });
-              setIsButtonClicked(true)
-            }}
-            className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
-              isButtonClicked ? 'bg-39da00 text-ffffff' : 'bg-717171 text-ffffff hover:scale-105'
-            }`}
-          >
-            {buttonContent}
-          </button>
-        {/* </a> */}
+
+      <div className="flex flex-col items-center justify-center mt-4">
+        {buttonContent.message === 'Bin has already been added to the database.' && (
+          <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+            ถังขยะนี้มีอยู่แล้ว
+          </p>
+        )}
+        <button
+          onClick={() => {
+            addMarkerToMap(markerName, locationValue, binTypes);
+            setLocationValue({ lat: 0, lng: 0 });
+          }}
+          className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
+            buttonContent.bgColor ? buttonContent.bgColor : 'bg-717171 text-ffffff hover:scale-105'
+          }`}
+        >
+          {buttonContent.message ? (
+            <>
+              <img
+                src={buttonContent.imgUrl}
+                alt="เพิ่มถังขยะ"
+                className="w-6 h-6 mr-2"
+              />
+            </>
+          ) : (
+            'เพิ่มถังขยะ'
+          )}
+        </button>
       </div>
     </div>
   );
