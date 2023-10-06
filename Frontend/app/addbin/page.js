@@ -21,7 +21,7 @@ export default function Addbin() {
   });
   const [errorMessage, setErrorMessage] = useState(null);
 
-  let url = 'http://localhost:8080/';
+  let url = 'https://tapanawat.myftp.org:8080/';
   
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);
