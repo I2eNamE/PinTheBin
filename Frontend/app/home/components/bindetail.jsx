@@ -19,7 +19,7 @@ const formatDate = (timestamp) => {
     return formattedDate;
 };
 
-export const BinDetail = ({ onClose, markerId }) => {
+export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
     const [binData, setBinData] = useState(null);
     
     useEffect(() => {
@@ -41,12 +41,14 @@ export const BinDetail = ({ onClose, markerId }) => {
         // Handle loading state or error state
         return <p>Loading bin details...</p>; // You can customize this based on your needs
     }
+    const activeBinTypes = Object.keys(binData).filter(key => binData[key] === 1);
+    console.log('binData:', binData);
 
     return (
         <div className="bin-detail-overlay">
             <div className=" w-full py-10 font-NotoSansThai">
                 <div className="bindetail bg-f4f4f4 md:w-96 rounded-xl overflow-y-auto no-scrollbar" style={{ maxHeight: '80vh', overflowScrolling: 'touch' }}>
-                    <div className="bin-detail-close flex justify-center bg-f4f4f4 rounded-xl w-full md:w-96 cursor-pointer hover:scale-110 hover:bg-ebebeb transition" onClick={onClose}>
+                    <div className="bin-detail-close flex justify-center bg-f4f4f4 rounded-xl w-full md:w-96 cursor-pointer hover:scale-110 hover:bg-ebebeb transition" onClick={() => { onClose(); setIsBinDetailVisible(false); }}>
                         <BsChevronCompactDown size={50} color="#505050" />
                     </div>
                     <div className="bg-ffffff rounded-xl m-3">
@@ -83,10 +85,10 @@ export const BinDetail = ({ onClose, markerId }) => {
                             <p className="text-2xl font-medium pl-2">ประเภทถังขยะ</p>
                         </div>
                         <div>
-                            <BinTypes bins={binData} />
+                            <BinTypes bins={activeBinTypes} />
                         </div>
                         <p className="flex justify-center text-base font-thin pl-2 mt-5">
-                            แก้ไขล่าสุดเมื่อ {formatDate(binData.timestamp)}
+                            แก้ไขล่าสุดเมื่อ {formatDate(binData.date)}
                         </p>
                     </div>
                 </div>

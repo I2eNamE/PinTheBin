@@ -32,6 +32,15 @@ export default function Addbin() {
   };
 
   const addMarkerToMap = (name, location, binTypes) => {
+    // console.log("binTypes", binTypes);
+    console.log("post: ", {
+      location: 'ทดสอบชื่อสถานที่',
+      lat: location.lat,
+      lng: location.lng,
+      binType: binTypes,
+      description: name,
+    });
+
     axios.post(url + 'bin', {
       location: 'ทดสอบชื่อสถานที่',
       lat: location.lat,
@@ -49,6 +58,7 @@ export default function Addbin() {
         });
       }
     }).catch((error) => {
+      console.log(error)
       console.log('Error: Bin has already been added to the database.');
       setButtonContent({
         imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',

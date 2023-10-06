@@ -30,11 +30,12 @@ export default function Home() {
 
   const toggleBinDetail = (markerId) => {
     console.log(markerId);
-    // setIsBinDetailVisible(!isBinDetailVisible);
+    setIsBinDetailVisible(!isBinDetailVisible);
     // console.log('Toggle Bin Detail')
     setSelectedMarkerId(markerId);
     const selectedBin = markers.find((marker) => marker.id === markerId);
     setSelectedBinData(selectedBin);
+    
   };
 
   // Set current location in state
@@ -76,7 +77,7 @@ export default function Home() {
 
       {selectedMarkerId !== null && (
         <div className="home-bindetail open">
-          <BinDetail onClose={() => setSelectedMarkerId(null)} markerId={selectedMarkerId} />
+          <BinDetail onClose={() => setSelectedMarkerId(null)} markerId={selectedMarkerId} setIsBinDetailVisible={setIsBinDetailVisible} />
         </div>
       )}
 
