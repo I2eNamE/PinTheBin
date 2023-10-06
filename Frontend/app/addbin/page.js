@@ -57,14 +57,16 @@ export default function Addbin() {
           message: 'Bin added successfully.',
         });
       }
-    }).catch((error) => {
-      console.log(error)
-      console.log('Error: Bin has already been added to the database.');
+      else {
       setButtonContent({
         imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
         bgColor: 'bg-ff5151',
         message: 'Bin has already been added to the database.',
       });
+      }
+    }).catch((error) => {
+      console.log(error)
+      console.log('Error: Bin has already been added to the database.');
     });
   };
   
