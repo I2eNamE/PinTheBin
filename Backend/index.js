@@ -206,34 +206,34 @@ app.post('/bin', (req, res) => {
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     conn.query(commandSearch, [lat, lng], (err, result) => {
-        if (err) {
+      if (err) {
+        throw err;
+      } else if (result.length !== 0) {
+        res.send({ error: true, message: "Bin has already been added to the database." });
+      } else {
+        // Initialize bin types
+        const binTypes = {
+          red_bin: false,
+          green_bin: false,
+          yellow_bin: false,
+          blue_bin: false,
+        };
+  
+        // Set bin types based on the received array
+        binType.forEach((type) => {
+          binTypes[type.toLowerCase()] = true;
+        });
+  
+        const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
+  
+        conn.query(commandAdd, values, (err, result) => {
+          if (err) {
             throw err;
-        } else if (result.length !== 0) {
-            res.send({ error: true, message: "Bin has already been added to the database." });
-        } else {
-            // Initialize bin types
-            const binTypes = {
-                red_bin: false,
-                green_bin: false,
-                yellow_bin: false,
-                blue_bin: false,
-            };
-
-            // Set bin types based on the received array
-            binType.forEach((type) => {
-                binTypes[type.toLowerCase()] = true;
-            });
-
-            const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
-
-            conn.query(commandAdd, values, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
-                }
-            });
-        }
+          } else {
+            res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
+          }
+        });
+      }
     });
 });
 
@@ -272,14 +272,14 @@ app.patch('/bin', (req, res) => {
             res.send({ error: false, message: "Update bin complete", result: result });
         }
     });
-});
-
-app.delete("/bin", (re, res) => {
-    let { lat, lng } = req.params.id;
+  });
+  
+app.delete("/bin",(re,res)=>{
+    let {lat,lng} = req.params.id;
     let commanddelete = `DELETE FROM bin_info WHERE lat = ? and lng = ?`;
-    conn.query(commanddelete, [lat, lng], (err, result) => {
-        if (err) throw err
-        else {
+    conn.query(commanddelete,[lat,lng],(err,result)=>{
+        if (err) throw err 
+        else{
             res.send({
                 error: false,
                 result: result
@@ -287,8 +287,6 @@ app.delete("/bin", (re, res) => {
         }
     })
 })
-
-
 
 
 

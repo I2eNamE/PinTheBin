@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import '../components/style.css'
 
-export const ConfirmDelete = ({ onCancelDelete, isVisible }) => {
+export const ConfirmDelete = ({ onCancelDelete, onConfirmDelete, isVisible }) => {
+    // ... (other states and functions)
     const [isDeleteClicked, setisDeleteClicked] = useState(false);
     const handleCancel = () => {
         onCancelDelete();
@@ -19,6 +20,10 @@ export const ConfirmDelete = ({ onCancelDelete, isVisible }) => {
     'ยืนยันการลบถังขยะ'
     );
 
+    const handleConfirmDelete = () => {
+        onConfirmDelete(); // Call the onConfirmDelete function passed from the parent component
+      };
+
     return (
         <div className="confirm-delete-overlay">
             <div className="flex justify-center w-full font-NotoSansThai">
@@ -31,16 +36,16 @@ export const ConfirmDelete = ({ onCancelDelete, isVisible }) => {
                             <p className="text-base font-thin text-505050">คุณต้องการลบถังขยะนี้ใช่หรือไม่</p>
                         </div>
                         <div className='flex flex-col mt-4'>
-                            <a href='/home' className='flex flex-col mt-4 '>
-                                <button
-                                    onClick={() => setisDeleteClicked(true)}
-                                    className={`flex items-center justify-center rounded-lg border border-ebebeb p-4 shadow-lg hover:scale-105 transition mb-2 ${
-                                        isDeleteClicked ? 'bg-39da00 text-ffffff' : 'bg-ff5151 text-ffffff hover:bg-FF0000'
-                                    }`}
-                                >
-                                    {buttonDelContent}
-                                </button>
-                            </a>
+                            {/* <a href='/home' className='flex flex-col mt-4 '> */}
+                            <button
+                                onClick={handleConfirmDelete}
+                                className={`flex items-center justify-center rounded-lg border border-ebebeb p-4 shadow-lg hover:scale-105 transition mb-2 ${
+                                isDeleteClicked ? 'bg-39da00 text-ffffff' : 'bg-ff5151 text-ffffff hover:bg-FF0000'
+                                }`}
+                            >
+                                {buttonDelContent}
+                            </button>
+                            {/* </a> */}
                             <button className="bg-717171 text-ffffff rounded-lg border border-ebebeb p-4 shadow-lg hover:scale-105 hover:bg-505050 transition"
                                 onClick={handleCancel}
                             >

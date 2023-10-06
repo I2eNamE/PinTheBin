@@ -56,6 +56,19 @@ export default function EditBin() {
     setIsConfirmDeleteVisible(true); // Show ConfirmDelete when delete button is clicked
   };
 
+  const confirmDelete = () => {
+    // Send a request to your backend to delete the bin with ID 42
+    axios.delete(`http://localhost:8080/bin/43`)
+      .then((response) => {
+        console.log(response);
+        setIsConfirmDeleteVisible(false); // Close the ConfirmDelete component
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle error, e.g., show an error message to the user
+      });
+  };
+
   const getLocation = () => {
     getCurrentLocation(
       (userLocation) => {
@@ -195,7 +208,11 @@ export default function EditBin() {
       </div>
       <div className={`dim ${isConfirmDeleteVisible ? 'open' : ''}`} onClick={handleCancelDelete}></div>
       {isConfirmDeleteVisible && (
-        <ConfirmDelete onCancelDelete={handleCancelDelete} isVisible={isConfirmDeleteVisible}/>
+        <ConfirmDelete
+          onCancelDelete={handleCancelDelete}
+          onConfirmDelete={confirmDelete}
+          isVisible={isConfirmDeleteVisible}
+        />
       )}
     </div>
   );

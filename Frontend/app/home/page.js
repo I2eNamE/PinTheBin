@@ -33,6 +33,8 @@ export default function Home() {
     // setIsBinDetailVisible(!isBinDetailVisible);
     // console.log('Toggle Bin Detail')
     setSelectedMarkerId(markerId);
+    const selectedBin = markers.find((marker) => marker.id === markerId);
+    setSelectedBinData(selectedBin);
   };
 
   // Set current location in state
@@ -52,22 +54,6 @@ export default function Home() {
     });
   };
   
-
-  const addMarkerToMap = () => {
-    setcurrentLocation()
-    console.log(currentLocation);
-    markers.push({
-      id: markers.length + 1,
-      name: "Test Marker",
-      position: currentLocation,
-    });
-    console.log(markers); // Log the updated markers array
-  };
-
-
-  const gotoeditbinpage = () => {
-    window.location.href = '/editbin';
-  }
 
   useEffect(() => {
     console.log(currentLocation); // This will log the updated currentLocation
@@ -118,17 +104,6 @@ export default function Home() {
         <SearchBar onLocationClick={setcurrentLocation}/>
       </div> */}
 
-      {/* DevMode */}
-      <div className="absolute bottom-5 left-5 flex font-NotoSansThai">
-        <button className="w-16 h-16 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition" onClick={addMarkerToMap}>Add Marker</button>
-        <button
-          className="w-24 h-16 ml-2 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition"
-          onClick={toggleBinDetail}
-        >
-          Show Bin Detail
-        </button>
-        <button className="w-24 h-16 ml-2 bg-ffffff rounded-lg shadow-lg focus:outline-none hover:scale-105 hover:bg-ebebeb transition" onClick={gotoeditbinpage}>Go to edit bin page</button>
-      </div>
     </div>
   );
 }
