@@ -201,94 +201,88 @@ app.get("/bin/:id", (req, res) => {
 
 app.post('/bin', (req, res) => {
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
-  
     let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;
-    let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  
+    let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
     conn.query(commandSearch, [lat, lng], (err, result) => {
-      if (err) {
-        throw err;
-      } else if (result.length !== 0) {
-        res.send({ error: true, message: "Bin has already been added to the database." });
-      } else {
-        // Initialize bin types
-        const binTypes = {
-          red_bin: false,
-          green_bin: false,
-          yellow_bin: false,
-          blue_bin: false,
-        };
-  
-        // Set bin types based on the received array
-        binType.forEach((type) => {
-          binTypes[type.toLowerCase()] = true;
-        });
-  
-        const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
-  
-        conn.query(commandAdd, values, (err, result) => {
-          if (err) {
+        if (err) {
             throw err;
-          } else {
-            res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
-          }
-        });
-      }
+        } else if (result.length !== 0) {
+            res.send({ error: true, message: "Bin has already been added to the database." });
+        } else {
+            // Initialize bin types
+            const binTypes = {
+                red_bin: false,
+                green_bin: false,
+                yellow_bin: false,
+                blue_bin: false,
+            };
+
+            // Set bin types based on the received array
+            binType.forEach((type) => {
+                binTypes[type.toLowerCase()] = true;
+            });
+
+            const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
+
+            conn.query(commandAdd, values, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
+                }
+            });
+        }
     });
-  });
-  
-  app.patch('/bin', (req, res) => {
+});
+
+app.patch('/bin', (req, res) => {
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
-    // console.log(binType);
-  
     // Initialize bin types
     const binTypes = {
-      red_bin: false,
-      green_bin: false,
-      yellow_bin: false,
-      blue_bin: false,
+        red_bin: false,
+        green_bin: false,
+        yellow_bin: false,
+        blue_bin: false,
     };
-  
     // Set bin types based on the received array
     binType.forEach((type) => {
-      binTypes[`${type.toLowerCase()}`] = true;
+        binTypes[`${type.toLowerCase()}`] = true;
     });
-  
     let command = `UPDATE bin_info 
-                  SET location = ?, description = ?, red_bin = ?,
+                  SET date = CURRENT_TIMESTAMP,location = ?, description = ?, red_bin = ?,
                   green_bin = ?, yellow_bin = ?, blue_bin = ?, picture = ?
                   WHERE lat = ? AND lng = ?;`;
-  
     const values = [
-      location,
-      description,
-      binTypes.red_bin,
-      binTypes.green_bin,
-      binTypes.yellow_bin,
-      binTypes.blue_bin,
-      picture,
-      lat,
-      lng,
+        location,
+        description,
+        binTypes.red_bin,
+        binTypes.green_bin,
+        binTypes.yellow_bin,
+        binTypes.blue_bin,
+        picture,
+        lat,
+        lng,
     ];
-  
     conn.query(command, values, (err, result) => {
-      if (err) {
-        throw err;
-      } else {
-        res.send({ error: false, message: "Update bin complete", result: result });
-      }
+        if (err) {
+            throw err;
+        } else {
+            res.send({ error: false, message: "Update bin complete", result: result });
+        }
     });
-  });
-  
-app.delete("/bin",(re,res)=>{
-    let {lat,lng} = req.params.id;
+});
+
+app.delete("/bin", (re, res) => {
+    let { lat, lng } = req.params.id;
     let commanddelete = `DELETE FROM bin_info WHERE lat = ? and lng = ?`;
-    conn.query(commanddelete,[lat,lng],(err,result)=>{
-        if (err) throw err 
-        else{
+    conn.query(commanddelete, [lat, lng], (err, result) => {
+        if (err) throw err
+        else {
             res.send({
-                error:false,
-                result:result
+                error: false,
+                result: result
             })
         }
     })
@@ -300,7 +294,8 @@ app.delete("/bin",(re,res)=>{
 
 // end bin info and start report tablea
 app.get('/report', (req, res) => {
-    let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
+    let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,
+                    report.description, bin_info.lat,bin_info.lng 
                     from (( report inner join bin_info on report.bin = bin_info.id)
                    inner join user_info on report.user_report = user_info.id);`;
     conn.query(command, (err, result) => {
