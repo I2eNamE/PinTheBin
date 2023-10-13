@@ -274,19 +274,26 @@ app.patch('/bin', (req, res) => {
     });
   });
   
-app.delete("/bin",(re,res)=>{
-    let {lat,lng} = req.params.id;
-    let commanddelete = `DELETE FROM bin_info WHERE lat = ? and lng = ?`;
-    conn.query(commanddelete,[lat,lng],(err,result)=>{
-        if (err) throw err 
-        else{
+app.delete("/bin/:id", (req, res) => {
+    let binId = req.params.id;
+    let commanddelete = `DELETE FROM bin_info WHERE id = ?`;
+    
+    conn.query(commanddelete, [binId], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send({
+                error: true,
+                message: "Error deleting bin",
+            });
+        } else {
             res.send({
                 error: false,
-                result: result
-            })
+                result: result,
+            });
         }
-    })
-})
+    });
+});
+
 
 
 

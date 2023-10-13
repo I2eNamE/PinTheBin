@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../components/style.css'
+import './style.css'
 
 export const ConfirmDelete = ({ onCancelDelete, onConfirmDelete, isVisible }) => {
     // ... (other states and functions)

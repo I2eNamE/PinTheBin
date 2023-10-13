@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { BsFillPinMapFill } from 'react-icons/bs';
-import { ToggleButtons } from '../addbin/components/bintype';
+import { ToggleButtons } from './components/togglebutton';
 import { getCurrentLocation } from '../home/utils/getcurrentlocation';
 import { markerdata as markers } from '../home/data/markerdata';
 import axios from "axios";
@@ -21,7 +21,7 @@ export default function Addbin() {
   });
   const [errorMessage, setErrorMessage] = useState(null);
 
-  let url = 'https://tapanawat.myftp.org:8080/';
+  let url = 'http://localhost:8080/';
   
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);
@@ -56,6 +56,7 @@ export default function Addbin() {
           bgColor: 'bg-39da00',
           message: 'Bin added successfully.',
         });
+        window.location.href = '/home';
       }
       else {
       setButtonContent({

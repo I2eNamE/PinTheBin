@@ -5,6 +5,7 @@ import { BsChevronCompactDown } from "react-icons/bs";
 import BinTypes from "./bintype";
 import React, { useState, useEffect } from "react";
 import '../components/style.css';
+import Link from 'next/link';
 
 const formatDate = (timestamp) => {
     const options = {
@@ -25,7 +26,7 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch(`https://tapanawat.myftp.org:8080/bin/${markerId}`);
+            const response = await fetch(`http://localhost:8080/bin/${markerId}`);
             const data = await response.json();
             setBinData(data.response[0]);
           } catch (error) {
@@ -43,6 +44,7 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
     }
     const activeBinTypes = Object.keys(binData).filter(key => binData[key] === 1);
     console.log('binData:', binData);
+    console.log('activeBinTypes:', activeBinTypes);
 
     return (
         <div className="bin-detail-overlay">
@@ -60,16 +62,19 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
                     </div>
                     <div className="bg-ffffff rounded-xl p-4 m-3">
                         <div className="flex justify-end">
-                            <a href="/reportbin">
+                            <div>
                                 <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg hover:scale-105 hover:bg-ebebeb transition">
                                     <MdFlag size={30} color="#505050" />
                                 </button>
-                            </a>
-                            <a href="/editbin">
-                                <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg ml-1 hover:scale-105 hover:bg-ebebeb transition">
-                                    <BiSolidPencil size={30} color="#505050" />
-                                </button>
-                            </a>
+                            </div>
+                            <div>
+                                <Link href={`/editbin/${markerId}`}>
+                                    <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg ml-1 hover:scale-105 hover:bg-ebebeb transition">
+                                        <BiSolidPencil size={30} color="#505050" />
+                                    </button>
+                                </Link>
+                            </div>
+                            
                         </div>
                         <div className="flex justify-start items-center">
                             <MdPinDrop size={30} color="#505050" />

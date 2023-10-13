@@ -25,7 +25,7 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   const fetchBinData = (markerId) => {
-    axios.get(`https://tapanawat.myftp.org:8080/bin/${markerId}`)
+    axios.get(`http://localhost:8080/bin/${markerId}`)
       .then(response => {
         // Check if 'response.data' and 'response.data.response' exist
         if (response.data && response.data.response && response.data.response[0]) {
@@ -44,7 +44,7 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   useEffect(() => {
-    axios.get("https://tapanawat.myftp.org:8080/bin")
+    axios.get("http://localhost:8080/bin")
       .then(response => {
         setMarkers(response.data.response);
       })

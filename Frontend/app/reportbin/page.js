@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { BsFillPinMapFill } from 'react-icons/bs';
-import { ToggleButtons } from '../addbin/components/bintype';
+import { ToggleButtons } from '../addbin/components/togglebutton';
 import { getCurrentLocation } from '../home/utils/getcurrentlocation';
 
 export default function ReportBin() {

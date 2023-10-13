@@ -38,10 +38,14 @@ export default function Home() {
     
   };
 
+  const closeBinDetail = () => {
+    setIsBinDetailVisible(false);
+  }
+
   // Set current location in state
   const defaultCenter = { // Default center coordinates
-    lat: 13.8242059,
-    lng: 100.5159011
+    lat: 13.8216908,
+    lng: 100.5138407
   };
   
   const [currentLocation, setCurrentLocation] = useState(defaultCenter); // Initialize with default center
@@ -94,8 +98,9 @@ export default function Home() {
 
       <div
         className={`sidebar-dim ${isBinDetailVisible ? 'open' : ''}`}
-        onClick={toggleBinDetail}
-      ></div>
+        onClick={() => { setSelectedMarkerId(null); setIsBinDetailVisible(false); }}>
+          
+      </div>
 
       <div className="home-topbar sm:w-full md:w-1/3">
         <Topbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} onLocationClick={setcurrentLocation}/>
