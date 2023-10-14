@@ -5,7 +5,7 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import { BsFillPinMapFill } from 'react-icons/bs';
 import { ToggleButtons } from './components/togglebutton';
 import { getCurrentLocation } from '../home/utils/getcurrentlocation';
-import { markerdata as markers } from '../home/data/markerdata';
+import Image from 'next/image'
 import axios from "axios";
 
 export default function Addbin() {
@@ -53,7 +53,7 @@ export default function Addbin() {
       if (response.status === 201) {
         console.log('Bin added successfully.');
         setButtonContent({
-          imgUrl: 'https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&',
+          imgUrl: '/static/Checkmark.png',
           bgColor: 'bg-39da00',
           message: 'Bin added successfully.',
         });
@@ -61,7 +61,7 @@ export default function Addbin() {
       }
       else {
       setButtonContent({
-        imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+        imgUrl: '/static/Cancel.png',
         bgColor: 'bg-ff5151',
         message: 'Bin has already been added to the database.',
       });
@@ -95,18 +95,6 @@ export default function Addbin() {
     };
     handleButtonStateChange(newButtonStates);
   };
-
-  // const buttonContent = isButtonClicked ? (
-  //   <>
-  //     <img
-  //       src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
-  //       alt="เพิ่มถังขยะ"
-  //       className="w-6 h-6 mr-2"
-  //     />
-  //   </>
-  // ) : (
-  //   'เพิ่มถังขยะ'
-  // );
   
   const handleFileChange = (e) => {
     // Handle file changes here if needed
@@ -218,9 +206,11 @@ export default function Addbin() {
         >
           {buttonContent.message ? (
             <>
-              <img
+              <Image
                 src={buttonContent.imgUrl}
                 alt="เพิ่มถังขยะ"
+                width="100"
+                height="100"
                 className="w-6 h-6"
               />
             </>

@@ -199,6 +199,19 @@ app.get("/bin/:id", (req, res) => {
     })
 })
 
+// Search bin by location or description
+app.post('/bin/search', (req, res) => {
+    let { location, description } = req.body;
+    let command = `SELECT * FROM bin_info WHERE location LIKE ? OR description LIKE ?;`; // TODO: Sanitize sql query
+    conn.query(command, [`%${location}%`, `%${description}%`], (err, result) => {
+        if (err) throw err; else if (result.length === 0) {
+            res.status(404).send({ error: true, message: "Bin not found" });
+        } else {
+            res.send({ error: false, message: "Search bin complete", response: result });
+        }
+    });
+});
+
 app.post('/bin', (req, res) => {
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
     let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;

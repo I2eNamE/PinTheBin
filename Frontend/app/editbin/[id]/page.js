@@ -8,6 +8,7 @@ import { ToggleButtons } from '../../addbin/components/togglebutton';
 import { getCurrentLocation } from '../../home/utils/getcurrentlocation';
 import { ConfirmDelete } from './components/confirmdelete';
 import { BinNotFound } from './components/binnotfound';
+import Image from 'next/image';
 import './components/style.css';
 import axios from 'axios';
 
@@ -225,9 +226,11 @@ export default function EditBin({ params }) {
             }`}
           >
             {isButtonClicked ? (
-              <img
-                src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
+              <Image
+                src="/static/Checkmark.png"
                 alt="แก้ไขถังขยะ"
+                width="96"
+                height="96"
                 className="w-6 h-6"
               />
             ) : (

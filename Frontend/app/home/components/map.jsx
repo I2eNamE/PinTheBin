@@ -67,7 +67,7 @@ export const Map = ({ center, onMarkerClick }) => {
           <Marker
             key={id}
             icon={{
-              url: "https://media.discordapp.net/attachments/1154651284788498432/1154658283232178186/BinMarker-removebg-preview.png",
+              url: "/static/BinMarker.png",
               scaledSize: new window.google.maps.Size(60, 60),
             }}
             position={{ lat: parseFloat(lat), lng: parseFloat(lng) }}

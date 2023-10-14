@@ -2,13 +2,39 @@ import React, { useState } from "react";
 import { MdMenu } from "react-icons/md";
 import "./style.css";
 import { SearchBar } from '../components/searchbar';
+import axios from 'axios';
 
 export const Topbar = ({ isSidebarOpen, toggleSidebar, onLocationClick }) => {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleInputChange = (event) => {
     const inputValue = event.target.value;
+    setSearchInput(inputValue);
     setIsSearchBarVisible(inputValue.trim().length > 0);
+ 
+    // Make an API call when the input changes
+    axios.post('http://localhost:8080/bin/search', { 
+      location: inputValue, 
+      description: inputValue 
+    })
+      .then(response => {
+        console.log('Search results:', response.data.response);
+        setSearchResults(response.data.response);
+      })
+      .catch(error => {
+        console.error('Error searching bins:', error);
+      });
+  };
+
+  const handleLocationClick = (location) => {
+    // Call the provided callback
+    onLocationClick(location);
+    console.log('location:', location)
+    setSearchInput('');
+    setIsSearchBarVisible(false);
+    setSearchResults([]);
   };
 
   return (
@@ -28,11 +54,17 @@ export const Topbar = ({ isSidebarOpen, toggleSidebar, onLocationClick }) => {
               placeholder="ค้นหาถังขยะใกล้เคียง"
               className="font-NotoSansThai outline-none px-2 py-3 rounded-xl w-full"
               onChange={handleInputChange}
+              value={searchInput}
             />
           </div>
         </div>
       </div>
-      {isSearchBarVisible && <SearchBar onLocationClick={onLocationClick}/>}
+      {isSearchBarVisible && (
+        <SearchBar
+          onLocationClick={handleLocationClick}
+          searchResults={searchResults}
+        />
+      )}
     </div>
   );
 };

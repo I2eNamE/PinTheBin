@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { IoMdArrowRoundBack } from 'react-icons/io';
+import Image from 'next/image'
 
 const ReportBin = ({ params }) => {
   // const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -19,7 +20,7 @@ const ReportBin = ({ params }) => {
     try {
       if (!headerName) {
         setButtonContent({
-          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          imgUrl: '/static/Cancel.png',
           bgColor: 'bg-ff5151',
           message: 'please fill in the header',
         });
@@ -28,7 +29,7 @@ const ReportBin = ({ params }) => {
 
       if (!reportCategory) {
         setButtonContent({
-          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          imgUrl: '/static/Cancel.png',
           bgColor: 'bg-ff5151',
           message: 'please select a category',
         });
@@ -37,7 +38,7 @@ const ReportBin = ({ params }) => {
 
       if (reportCategory === 'อื่น ๆ' && !reportContent) {
         setButtonContent({
-          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          imgUrl: '/static/Cancel.png',
           bgColor: 'bg-ff5151',
           message: 'please fill in the description',
         });
@@ -57,14 +58,14 @@ const ReportBin = ({ params }) => {
       if (response.data.error) {
         // If there is an error, set appropriate feedback
         setButtonContent({
-          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          imgUrl: '/static/Cancel.png',
           bgColor: 'bg-ff5151',
           message: response.data.message,
         });
       } else {
         // If successful, set appropriate feedback
         setButtonContent({
-          imgUrl: 'https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&',
+          imgUrl: '/static/Checkmark.png',
           bgColor: 'bg-39da00',
           message: 'รายงานถังขยะเรียบร้อยแล้ว',
         });
@@ -178,9 +179,11 @@ const ReportBin = ({ params }) => {
           >
             {buttonContent.message ? (
               <>
-                <img
+                <Image
                   src={buttonContent.imgUrl}
                   alt="รายงานถังขยะ"
+                  width="100"
+                  height="100"
                   className="w-6 h-6"
                 />
               </>
