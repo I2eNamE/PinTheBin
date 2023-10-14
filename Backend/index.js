@@ -7,6 +7,8 @@ import sessions from 'express-session';
 import cookieParser from "cookie-parser";
 import https from 'https';
 import 'dotenv/config'
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const app = express();
 const port = 8080
@@ -35,6 +37,27 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 // test webhook
+
+
+
+// implement jwt
+const secretKey = process.env.secretkey
+const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization;
+    if (!token) {
+        return res.status(403).json({ error: true, message: 'Unauthorized: No token provided' });
+    }
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ error: true, message: 'Unauthorized: Invalid token' });
+        }
+        req.user = decoded;
+        next();
+    });
+};
+
+
+
 
 
 // create connection_data to database
@@ -85,32 +108,44 @@ app.get('/user/:id', (req, res) => {
     })
 })
 
-app.post('/user', (req, res) => {
-    let { email, name, password, passwordAgain } = req.body;
-    if (password !== passwordAgain) {
+app.post('/user', async (req, res) => {
+    let { email, name, password, confirmPassword } = req.body;
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
         return res.status(400).send({ error: true, message: "password mismatch" })
+
     } else {
-        let commandAdd = `INSERT INTO user_info (email,name,password) VALUE(?, ?, ?);` // TODO: Sanitize sql query
-        let commandSearch = `SELECT * FROM user_info WHERE email= ?;`
-        conn.query(commandSearch, [email], (err, result) => {
-            if (err) res.send(err); else if (result.length !== 0) {
-                res.status(400).send({
-                    error: true, message: "this email has been register"
-                })
-            } else {
-                conn.query(commandAdd, [email, name, password], (err, result) => {
-                    if (err) throw err; else {
+        try {
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10); // 10 is the saltRounds
+
+            let commandAdd = `INSERT INTO user_info (email, name, password) VALUES (?, ?, ?);`
+            let commandSearch = `SELECT * FROM user_info WHERE email= ?;`
+
+            conn.query(commandSearch, [email], async (err, result) => {
+                if (err) {
+                    res.send(err);
+                } else if (result.length !== 0) {
+                    res.status(400).send({
+                        error: true, message: "this email has been registered"
+                    });
+                } else {
+                    // Store the hashed password in the database
+                    conn.query(commandAdd, [email, name, hashedPassword], (err, result) => {
+                        if (err) throw err;
                         res.status(201).send({
                             error: false, message: "create new user complete", response: result
-                        })
-                    }
-                })
-            }
-        })
-
+                        });
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('Error hashing password:', error);
+            res.status(500).json({ error: true, message: 'Internal Server Error' });
+        }
     }
-
-})
+});
 
 app.post('/picture', (req, res) => {
     let { id, path } = req.body;
@@ -132,21 +167,50 @@ app.post('/picture', (req, res) => {
 app.post('/login', (req, res) => {
     let { email, password } = req.body;
     let command = `SELECT password FROM user_info WHERE email = ?`;
-    conn.query(command, [email], (err, result) => {
-        if (err) throw err; else if (result.length === 1 && result[0].password === password) {
-            req.session.userid = email;
-            res.send({ error: false, message: "password correct welcome!" })
-        } else {
-            res.status(404).send({ error: true, message: "email or password is incorrect try again!" })
+
+    conn.query(command, [email], async (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: true, message: 'Internal Server Error' });
         }
-    })
-})
+
+        if (result.length !== 1) {
+            return res.status(404).json({ error: true, message: 'Email or password is incorrect' });
+        }
+
+        console.log('result password:', result[0].password)
+        console.log('password:', password)
+        const user = result[0];
+
+        // Compare hashed password
+        const isPasswordValid = await bcrypt.compare(password, result[0].password);
+
+        console.log('isPasswordValid', isPasswordValid)
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: true, message: 'Email or password is incorrect' });
+        }
+        
+
+        // Generate JWT
+        const token = jwt.sign({ userId: user.id, userEmail: email }, secretKey, { expiresIn: '1h' });
+
+        res.status(200).json({ error: false, message: 'Login successful', token });
+    });
+});
+
+// Middleware to protect routes with JWT
+app.use('/secure', verifyToken);
+
+// Example of a secure route
+app.get('/secure/data', (req, res) => {
+    res.status(200).json({ error: false, message: 'Secure data' });
+});
+
 
 app.patch('/changepassword', (req, res) => {
-    let { id, oldPassword, newPassword, passwordAgain } = req.body;
+    let { id, oldPassword, newPassword, confirmPassword } = req.body;
     let commandSearch = `SELECT password FROM user_info where id = ?`;
     let commandUpdate = `UPDATE user_info SET password = ? WHERE id = ?`;
-    if (newPassword !== passwordAgain) {
+    if (newPassword !== confirmPassword) {
         return res.status(400).send({
             error: true,
             message: "password miss match"

@@ -7,24 +7,36 @@ import { useState } from "react";
 export const LoginBox = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  let url = 'https://tapanawat.myftp.org:8080/';
+  const [buttonContent, setButtonContent] = useState({ message: '' });
+  let url = 'http://localhost:8080/';
 
-  const handleLogin = () => {
-    axios.post(url+'login', {
-      email: email,
-      password: password,
-    }).then((response) => {
-      // console.log(response.data);
-      console.log(response);
-      if(response.status == 200){
-        window.location.href = "/home";
-      }
+  const handleLogin = async () => {
+    try {
+        const response = await axios.post(`${url}login`, {
+            email,
+            password,
+        });
+
+        if (response.status === 200) {
+            // Store the token in local storage or a cookie
+            localStorage.setItem('token', response.data.token);
+            setButtonContent({
+              message: 'Login successful',
+              bgColor: '',
+            });
+            console.log('Login successful:', response);
+            // window.location.href = '/home';
+        }
+    } catch (error) {
+        console.error('Login failed:', error);
+        setButtonContent({
+          message: 'Email or password is incorrect',
+          bgColor: 'bg-ff5151',
+        });
+        
     }
-    ).catch((error) => {
-      console.log(error);
-    }
-    );
   }
+
 
   return (
     <div className='bg-ffffff rounded-xl shadow-lg p-8 w-96 m-3 font-NotoSansThai font-medium'>
@@ -58,9 +70,16 @@ export const LoginBox = () => {
             <a href="/forgot" className="text-505050 hover:underline">ลืมรหัสผ่าน</a>
           </div>
           <div className="text-center">
+              {buttonContent.message === 'Email or password is incorrect' && (
+              <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+                  อีเมลหรือรหัสผ่านไม่ถูกต้อง
+              </p>
+            )}
             <button
               type="button"
-              className="w-full px-4 py-4 mb-3 text-xl text-ffffff rounded-xl bg-717171 hover:scale-105 transition-all"
+              className={`w-full px-4 py-4 mb-3 text-xl text-ffffff rounded-xl bg-717171 hover:scale-105 transition-all ${
+              buttonContent.bgColor ? buttonContent.bgColor : 'bg-717171 text-ffffff hover:scale-105'
+              }`}
               onClick={handleLogin}
             >
               เข้าสู่ระบบ
