@@ -22,11 +22,40 @@
   }
 
   .confirmdelete-slide.open {
-    bottom: 30%;
+    bottom: 40%;
     display: block;
     transition: all 0.3s ease-in-out;
   }
+}
+
+@media screen and (max-width: 768px) {
+  .binnotfound-slide {
+    width: 100%;
+    position: fixed;
+    bottom: -100%;
+    transition: all 1s ease-in-out;
+    z-index: 3;
+  }
+
+  .binnotfound-slide.open {
+    bottom: 0;
+  }
   
+}
+
+@media screen and (min-width: 768px) {
+  .binnotfound-slide {
+    position: fixed;
+    bottom: -100%;
+    transition: all 0.3s ease-in-out;
+    z-index: 3;
+  }
+
+  .binnotfound-slide.open {
+    bottom: 40%;
+    display: block;
+    transition: all 0.3s ease-in-out;
+  }
 }
 
 .dim {

@@ -7,6 +7,7 @@ import { MdDeleteForever } from 'react-icons/md';
 import { ToggleButtons } from '../../addbin/components/togglebutton';
 import { getCurrentLocation } from '../../home/utils/getcurrentlocation';
 import { ConfirmDelete } from './components/confirmdelete';
+import { BinNotFound } from './components/binnotfound';
 import './components/style.css';
 import axios from 'axios';
 
@@ -19,6 +20,8 @@ export default function EditBin({ params }) {
   const [binTypes, setBinTypes] = useState([]);
   const [binData, setBinData] = useState(null);
   const [toggleButtonStates, setToggleButtonStates] = useState({});
+  const [isBinNotFoundVisible, setIsBinNotFoundVisible] = useState(false);
+
 
   let url = 'http://localhost:8080/';
 
@@ -97,6 +100,13 @@ export default function EditBin({ params }) {
       })
       .catch((error) => {
         console.error(error);
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error (Bin Not Found)
+          setIsBinNotFoundVisible(true);
+        } else {
+          // Handle other errors
+          // ...
+        }
       });
   }, [params.id]);
   
@@ -227,6 +237,7 @@ export default function EditBin({ params }) {
         </div>
       </div>
       <div className={`dim ${isConfirmDeleteVisible ? 'open' : ''}`} onClick={handleCancelDelete}></div>
+      <div className={`dim ${isBinNotFoundVisible ? 'open' : ''}`}></div>
       {isConfirmDeleteVisible && (
         <ConfirmDelete
           onCancelDelete={handleCancelDelete}
@@ -234,6 +245,7 @@ export default function EditBin({ params }) {
           isVisible={isConfirmDeleteVisible}
         />
       )}
+      {isBinNotFoundVisible && <BinNotFound/>}
     </div>
   );
 }

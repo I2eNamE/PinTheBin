@@ -71,8 +71,6 @@ export const ToggleButtons = ({ onButtonStateChange, initialButtonStates }) => {
   useEffect(() => {
     onButtonStateChange(buttonStates);
   }, [buttonStates, onButtonStateChange]);
-    
-  console.log('initialButtonStates:', initialButtonStates);
 
   return (
     <div className="grid grid-cols-2 gap-4">
