@@ -63,9 +63,11 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
                     <div className="bg-ffffff rounded-xl p-4 m-3">
                         <div className="flex justify-end">
                             <div>
+                            <Link href={`/reportbin/${markerId}`}>
                                 <button className="bg-ffffff rounded-lg border border-ebebeb p-2 shadow-lg hover:scale-105 hover:bg-ebebeb transition">
                                     <MdFlag size={30} color="#505050" />
                                 </button>
+                            </Link>
                             </div>
                             <div>
                                 <Link href={`/editbin/${markerId}`}>

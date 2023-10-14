@@ -121,7 +121,7 @@ app.post('/picture', (req, res) => {
         else {
             res.send({
                 error: false,
-                massage: "update picture complete",
+                message: "update picture complete",
                 result: result
             })
         }
@@ -149,7 +149,7 @@ app.patch('/changepassword', (req, res) => {
     if (newPassword !== passwordAgain) {
         return res.status(400).send({
             error: true,
-            massage: "password miss match"
+            message: "password miss match"
         })
     }
     conn.query(commandSearch, [id], (err, result) => {
@@ -157,7 +157,7 @@ app.patch('/changepassword', (req, res) => {
         else if (result.length == 0 || result[0].password != oldPassword) {
             res.send({
                 error: true,
-                massage: "can not find old password or old password not correct",
+                message: "can not find old password or old password not correct",
             })
         }
         else {
@@ -166,7 +166,7 @@ app.patch('/changepassword', (req, res) => {
                 else {
                     res.send({
                         error: false,
-                        massage: "update password",
+                        message: "update password",
                         result: result
                     })
                 }
@@ -344,14 +344,14 @@ app.post('/report', (req, res) => {
     let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?);`;
     conn.query(commandSearch, [bin, category], (err, result) => {
         if (err) throw err;
-        else if (result.length !== 0) { res.send({ error: true, massage: "this report has in database" }) }
+        else if (result.length !== 0) { res.send({ error: true, message: "this report has in database" }) }
         else {
             conn.query(commandAdd, [user_report, description, category, header, bin], (err, result) => {
                 if (err) throw err;
                 else {
                     res.send({
                         error: false,
-                        massage: "add report success",
+                        message: "add report success",
                         result: result
                     })
                 }
@@ -371,7 +371,7 @@ app.get('/appReport', (req, res) => {
             res.status(404).send({
                 error: true, message: "haven't report now"
             })
-        } else if (result.length == 0) { res.status(404).send({ error: true, massage: "app report not found " }) }
+        } else if (result.length == 0) { res.status(404).send({ error: true, message: "app report not found " }) }
         else {
             res.send({
                 error: false, message: "search report complete", response: result
@@ -388,7 +388,7 @@ app.get('/appReport/:id', (req, res) => {
             res.status(404).send({
                 error: true, message: `haven't report id ${id} now`
             })
-        } else if (result.length == 0) { res.status(404).send({ error: true, massage: "app report not found " }) }
+        } else if (result.length == 0) { res.status(404).send({ error: true, message: "app report not found " }) }
         else {
             res.send({
                 error: false, message: "search report complete", response: result
@@ -406,7 +406,7 @@ app.post('/appReport', (req, res) => {
         else if (result.length !== 0) {
             res.status(404).send({
                 error: true,
-                massage: "this report has been in database"
+                message: "this report has been in database"
             })
         }
         else {
@@ -415,7 +415,7 @@ app.post('/appReport', (req, res) => {
                 else {
                     res.status(201).send({
                         error: false,
-                        massage: "add report complete",
+                        message: "add report complete",
                         result: result
                     })
                 }
