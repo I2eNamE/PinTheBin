@@ -2,63 +2,83 @@
 
 import React, { useState, useEffect } from 'react';
 import { IoMdArrowRoundBack } from 'react-icons/io';
-import { BsFillPinMapFill } from 'react-icons/bs';
-import { ToggleButtons } from '../addbin/components/togglebutton';
-import { getCurrentLocation } from '../home/utils/getcurrentlocation';
+import axios from 'axios';
 
-export default function ReportBin() {
-  const [buttonStates, setButtonStates] = useState(null);
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const [markerName, setMarkerName] = useState('');
-  const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
+export default function AppReport() {
+  const [headerName, setHeaderName] = useState('');
   const [reportCategory, setReportCategory] = useState('');
   const [reportContent, setReportContent] = useState('');
+  const [buttonContent, setButtonContent] = useState({
+    imgUrl: '',
+    bgColor: '',
+    message: '',
+  });
 
-  const handleButtonStateChange = (newButtonStates) => {
-    setButtonStates(newButtonStates);
-  };
-
-  const addMarkerToMap = (name, location, buttonStates) => {
-    // Your logic to add the marker to the map goes here
-    console.log('Adding marker to the map:', name, location, buttonStates);
-  };
-
-  const getLocation = () => {
-    getCurrentLocation(
-      (userLocation) => {
-        setLocationValue(userLocation);
-        console.log('User location:', userLocation);
-      },
-      (error) => {
-        console.error('Error getting user location:', error);
+  const submitReport = async () => {
+    try {
+      if (!headerName) {
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: 'please fill in the header',
+        });
+        return;
       }
-    );
+
+      if (!reportCategory) {
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: 'please select a category',
+        });
+        return;
+      }
+
+      if (reportCategory === 'อื่น ๆ' && !reportContent) {
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: 'please fill in the description',
+        });
+        return;
+      }
+
+      const response = await axios.post('http://localhost:8080/appReport', {
+        user: '10', // Replace with actual user ID or username
+        description: reportContent,
+        category: reportCategory,
+        header: headerName, // Replace with actual header
+      });
+
+      console.log(response);
+
+      if (response.data.error) {
+        // If there is an error, set appropriate feedback
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: response.data.message,
+        });
+      } else {
+        // If successful, set appropriate feedback
+        setButtonContent({
+          imgUrl: 'https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&',
+          bgColor: 'bg-39da00',
+          message: 'รายงานเรียบร้อยแล้ว',
+        });
+        // setIsButtonClicked(true);
+        window.location.href = '/home';
+      }
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      // Set appropriate feedback for the error
+      setButtonContent({
+        imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+        bgColor: 'bg-ff5151',
+        message: 'เกิดข้อผิดพลาดในการรายงาน',
+      });
+    }
   };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  const handleButtonClick = (buttonName) => {
-    const newButtonStates = {
-      ...buttonStates,
-      [buttonName]: {
-        ...buttonStates[buttonName],
-        active: !buttonStates[buttonName].active,
-      },
-    };
-    handleButtonStateChange(newButtonStates);
-  };
-
-  const buttonContent = isButtonClicked ? (
-    <img
-      src="https://cdn.discordapp.com/attachments/1154651284788498432/1156160485025120336/405bcae6a8367d49f44c04d4362d7340.png?ex=6513f5dc&is=6512a45c&hm=346a5415f0b333b0aac6f08cad2d79b4a66bf092b428eb9bc47ed9abab789411&"
-      alt="Report Bin"
-      className="w-6 h-6 mr-2"
-    />
-  ) : (
-    'ยืนยันการรายงาน'
-  );
 
   const reportCategories = [
     'ปัญหาการใช้งานทั่วไปใน Pin The Bin',
@@ -91,8 +111,8 @@ export default function ReportBin() {
               className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
               placeholder="เพิ่มหัวข้อการรายงาน"
               required
-              value={markerName}
-              onChange={(e) => setMarkerName(e.target.value)}
+              value={headerName}
+              onChange={(e) => setHeaderName(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -129,21 +149,47 @@ export default function ReportBin() {
         </form>
       </div>
 
-      <div className="flex justify-center">
-        <a href="/home">
-            <button
-            onClick={() => {
-                addMarkerToMap(markerName, locationValue, buttonStates);
-                setLocationValue({ lat: 0, lng: 0 });
-                setIsButtonClicked(true)
-            }}
+      <div className="flex flex-col items-center justify-center mt-4">
+        {/* <a href="/home"> */}
+          {buttonContent.message === 'this report has been in database' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              รายงานฉบับนี้มีอยู่แล้ว
+            </p>
+          )}
+          {buttonContent.message === 'please select a category' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              กรุณาเลือกหมวดหมู่การรายงาน
+            </p>
+          )}
+          {buttonContent.message === 'please fill in the description' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              กรุณากรอกคำอธิบายเพิ่มเติม
+            </p>
+          )}
+          {buttonContent.message === 'please fill in the header' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              กรุณากรอกหัวข้อการรายงาน
+            </p>
+          )}
+          <button
+            onClick={submitReport}
             className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
-                isButtonClicked ? 'bg-39da00 text-ffffff' : 'bg-717171 text-ffffff hover:scale-105'
+              buttonContent.bgColor ? buttonContent.bgColor : 'bg-717171 text-ffffff hover:scale-105'
             }`}
-            >
-            {buttonContent}
-            </button>
-        </a>
+          >
+            {buttonContent.message ? (
+              <>
+                <img
+                  src={buttonContent.imgUrl}
+                  alt="รายงานถังขยะ"
+                  className="w-6 h-6"
+                />
+              </>
+            ) : (
+              'ยืนยันการรายงาน'
+            )}
+          </button>
+        {/* </a> */}
       </div>
     </div>
   );

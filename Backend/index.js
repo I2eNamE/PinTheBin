@@ -344,12 +344,17 @@ app.post('/report', (req, res) => {
     let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?);`;
     conn.query(commandSearch, [bin, category], (err, result) => {
         if (err) throw err;
-        else if (result.length !== 0) { res.send({ error: true, message: "this report has in database" }) }
+        else if (result.length !== 0) { 
+            res.send({ 
+                error: true, 
+                message: "this report has been in database"
+            }) 
+        }
         else {
             conn.query(commandAdd, [user_report, description, category, header, bin], (err, result) => {
                 if (err) throw err;
                 else {
-                    res.send({
+                    res.status(201).send({
                         error: false,
                         message: "add report success",
                         result: result
@@ -399,12 +404,12 @@ app.get('/appReport/:id', (req, res) => {
 
 app.post('/appReport', (req, res) => {
     let { header, category, description = null, user } = req.body;
-    let commandSearch = `SELECT * FROM app_report WHERE category = ? and user = ? ;`;
+    let commandSearch = `SELECT * FROM app_report WHERE header = ? and user = ? ;`;
     let commandAdd = `INSERT INTO app_report(header,category,description,user) VALUES (?,?,?,?)`;
-    conn.query(commandSearch, [category, user], (err, result) => {
+    conn.query(commandSearch, [header, user], (err, result) => {
         if (err) throw err;
         else if (result.length !== 0) {
-            res.status(404).send({
+            res.send({
                 error: true,
                 message: "this report has been in database"
             })

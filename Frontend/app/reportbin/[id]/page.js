@@ -5,7 +5,7 @@ import axios from 'axios';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 
 const ReportBin = ({ params }) => {
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  // const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [headerName, setHeaderName] = useState('');
   const [reportCategory, setReportCategory] = useState('');
   const [reportContent, setReportContent] = useState('');
@@ -17,6 +17,33 @@ const ReportBin = ({ params }) => {
 
   const submitReport = async () => {
     try {
+      if (!headerName) {
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: 'please fill in the header',
+        });
+        return;
+      }
+
+      if (!reportCategory) {
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: 'please select a category',
+        });
+        return;
+      }
+
+      if (reportCategory === 'อื่น ๆ' && !reportContent) {
+        setButtonContent({
+          imgUrl: 'https://media.discordapp.net/attachments/1154651284788498432/1159487242260201642/Cancel.png?ex=653133a4&is=651ebea4&hm=da5e4f720d6e3e712d9dfa6d1d9de09e5f253769bcac1f96609c6624b199cfc9&=&width=125&height=125',
+          bgColor: 'bg-ff5151',
+          message: 'please fill in the description',
+        });
+        return;
+      }
+      
       const response = await axios.post('http://localhost:8080/report', {
         user_report: '10', // Replace with actual user ID or username
         description: reportContent,
@@ -41,7 +68,7 @@ const ReportBin = ({ params }) => {
           bgColor: 'bg-39da00',
           message: 'รายงานถังขยะเรียบร้อยแล้ว',
         });
-        setIsButtonClicked(true);
+        // setIsButtonClicked(true);
         window.location.href = '/home';
       }
     } catch (error) {
@@ -123,9 +150,24 @@ const ReportBin = ({ params }) => {
 
       <div className="flex flex-col items-center justify-center mt-4">
         {/* <a href="/home"> */}
-          {buttonContent.message === 'this report has in database' && (
+        {buttonContent.message === 'this report has been in database' && (
             <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
               รายงานฉบับนี้มีอยู่แล้ว
+            </p>
+          )}
+          {buttonContent.message === 'please select a category' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              กรุณาเลือกหมวดหมู่การรายงาน
+            </p>
+          )}
+          {buttonContent.message === 'please fill in the description' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              กรุณากรอกคำอธิบายเพิ่มเติม
+            </p>
+          )}
+          {buttonContent.message === 'please fill in the header' && (
+            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+              กรุณากรอกหัวข้อการรายงาน
             </p>
           )}
           <button
