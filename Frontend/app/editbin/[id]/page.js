@@ -14,6 +14,7 @@ export default function EditBin({ params }) {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [isConfirmDeleteVisible, setIsConfirmDeleteVisible] = useState(false);
   const [markerName, setMarkerName] = useState('');
+  const [locationName, setLocationName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
   const [binTypes, setBinTypes] = useState([]);
   const [binData, setBinData] = useState(null);
@@ -25,9 +26,9 @@ export default function EditBin({ params }) {
     setIsConfirmDeleteVisible(false);
   };
 
-  const editMarkerOnMap = (name, location, binTypes) => {
+  const editMarkerOnMap = (locationName, name, location, binTypes) => {
     axios.patch(url + 'bin', {
-      location: 'ทดสอบเปลี่ยนชื่อสถานที่',
+      location: locationName,
       lat: location.lat,
       lng: location.lng,
       binType: binTypes,
@@ -76,27 +77,32 @@ export default function EditBin({ params }) {
 
   useEffect(() => {
     // Fetch bin data when component mounts
+    console.log('Fetching bin data');
     axios.get(`${url}bin/${params.id}`)
       .then((response) => {
         const binData = response.data.response[0];
+        setLocationName(binData.location);
         setBinData(binData);
         setMarkerName(binData.description);
         setLocationValue({ lat: binData.lat, lng: binData.lng });
   
         const activeBinTypes = Object.keys(binData).filter(key => binData[key] === 1);
-        setToggleButtonStates(activeBinTypes);
-
+        setToggleButtonStates(activeBinTypes.reduce((acc, type) => {
+          acc[type] = true;
+          return acc;
+        }, {}));
+  
         console.log('Active bin types:', activeBinTypes);
         
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [params.id]);
   
 
   const handleButtonStateChange = (newButtonStates) => {
-    setToggleButtonStates(newButtonStates);
+    // setToggleButtonStates(newButtonStates); // Avoid this line
     const activeBinTypes = Object.keys(newButtonStates).filter(
       (binType) => newButtonStates[binType].active
     );
@@ -125,6 +131,20 @@ export default function EditBin({ params }) {
 
         <div className="p-8 flex flex-col justify-center items-center">
           <form>
+            <div className="mb-4">
+              <label htmlFor="location" className="block text-xl text-left mb-1">
+                ชื่อสถานที่
+              </label>
+              <textarea
+                type="text"
+                id="locationName"
+                className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
+                placeholder="ใส่ชื่อสถานที่ใกล้เคียง"
+                required
+                value={locationName}
+                onChange={(e) => setLocationName(e.target.value)}
+              />
+            </div>
             <div className="mb-4">
               <label htmlFor="description" className="block text-xl text-left mb-1">
                 คำอธิบาย
@@ -185,7 +205,7 @@ export default function EditBin({ params }) {
         <div className="mt-4 flex justify-center">
           <button
             onClick={() => {
-              editMarkerOnMap(markerName, locationValue, binTypes);
+              editMarkerOnMap(locationName, markerName, locationValue, binTypes);
               setLocationValue({ lat: 0, lng: 0 });
               setIsButtonClicked(true);
               window.location.href = '/home';

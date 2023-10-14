@@ -12,6 +12,7 @@ export default function Addbin() {
   const [buttonStates, setButtonStates] = useState(null);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [markerName, setMarkerName] = useState('');
+  const [locationName, setLocationName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
   const [binTypes, setBinTypes] = useState([]);
   const [buttonContent, setButtonContent] = useState({
@@ -31,10 +32,10 @@ export default function Addbin() {
     setBinTypes(activeBinTypes);
   };
 
-  const addMarkerToMap = (name, location, binTypes) => {
+  const addMarkerToMap = (locationName, name, location, binTypes) => {
     // console.log("binTypes", binTypes);
     console.log("post: ", {
-      location: 'ทดสอบชื่อสถานที่',
+      location: locationName,
       lat: location.lat,
       lng: location.lng,
       binType: binTypes,
@@ -42,7 +43,7 @@ export default function Addbin() {
     });
 
     axios.post(url + 'bin', {
-      location: 'ทดสอบชื่อสถานที่',
+      location: locationName,
       lat: location.lat,
       lng: location.lng,
       binType: binTypes,
@@ -133,13 +134,27 @@ export default function Addbin() {
         <form>
           <div className="mb-4">
             <label htmlFor="description" className="block text-xl text-left mb-1">
+              ชื่อสถานที่
+            </label>
+            <textarea
+              type="text"
+              id="description"
+              className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
+              placeholder="ใส่ชื่อสถานที่ใกล้เคียง"
+              required
+              value={locationName}
+              onChange={(e) => setLocationName(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="description" className="block text-xl text-left mb-1">
               คำอธิบาย
             </label>
             <textarea
               type="text"
               id="description"
               className="block p-4 border border-ebebeb rounded-xl focus:outline-none bg-ffffff font-normal w-full"
-              placeholder="ใส่คำอธิบายเพิ่มเติม เช่นสถานที่ใกล้เคียง"
+              placeholder="ใส่คำอธิบายเพิ่มเติม"
               required
               value={markerName}
               onChange={(e) => setMarkerName(e.target.value)}
@@ -194,7 +209,7 @@ export default function Addbin() {
         )}
         <button
           onClick={() => {
-            addMarkerToMap(markerName, locationValue, binTypes);
+            addMarkerToMap(locationName, markerName, locationValue, binTypes);
             setLocationValue({ lat: 0, lng: 0 });
           }}
           className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
@@ -206,7 +221,7 @@ export default function Addbin() {
               <img
                 src={buttonContent.imgUrl}
                 alt="เพิ่มถังขยะ"
-                className="w-6 h-6 mr-2"
+                className="w-6 h-6"
               />
             </>
           ) : (

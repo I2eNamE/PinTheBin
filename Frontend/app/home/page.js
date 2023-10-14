@@ -80,7 +80,7 @@ export default function Home() {
       </div>
 
       {selectedMarkerId !== null && (
-        <div className="home-bindetail open">
+        <div className="home-bindetail open w-full">
           <BinDetail onClose={() => setSelectedMarkerId(null)} markerId={selectedMarkerId} setIsBinDetailVisible={setIsBinDetailVisible} />
         </div>
       )}

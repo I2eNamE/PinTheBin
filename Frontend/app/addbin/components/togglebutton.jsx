@@ -39,20 +39,19 @@ export const ToggleButtons = ({ onButtonStateChange, initialButtonStates }) => {
   });
 
   const setInitialButtonStates = (initialStates) => {
-    const initialState = { ...buttonStates }; // Copy the existing state
-
-    // Set the active property based on the provided initialButtonStates
-    if (initialStates && Array.isArray(initialStates)) {
-      initialStates.forEach(binType => {
-        if (initialState[binType]) {
-          initialState[binType].active = true;
-        }
+    if (initialStates && typeof initialStates === 'object') {
+      setButtonStates((prevState) => {
+        const newState = { ...prevState };
+  
+        Object.keys(newState).forEach((binType) => {
+          newState[binType].active = initialStates[binType] || false;
+        });
+  
+        return newState;
       });
     }
-
-    setButtonStates(initialState);
-    onButtonStateChange(initialState); // Call the callback with the initial state
   };
+  
 
   useEffect(() => {
     setInitialButtonStates(initialButtonStates);
@@ -71,9 +70,9 @@ export const ToggleButtons = ({ onButtonStateChange, initialButtonStates }) => {
 
   useEffect(() => {
     onButtonStateChange(buttonStates);
-  }, [buttonStates]);
+  }, [buttonStates, onButtonStateChange]);
     
-
+  console.log('initialButtonStates:', initialButtonStates);
 
   return (
     <div className="grid grid-cols-2 gap-4">
