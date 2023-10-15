@@ -3,6 +3,7 @@
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
+import Link from 'next/link';
 
 export const LoginBox = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +26,13 @@ export const LoginBox = () => {
               bgColor: '',
             });
             console.log('Login successful:', response);
-            // window.location.href = '/home';
+            // router.push('/home');
+            await axios.get(`${url}`, {
+              headers: {
+                Authorization: `Bearer ${response.data.token}`,
+              },
+            });
+            // router.push('/home');
         }
     } catch (error) {
         console.error('Login failed:', error);
@@ -86,7 +93,7 @@ export const LoginBox = () => {
             </button>
           </div>
           <div className="text-center pt-2">
-            <p>ยังไม่มีบัญชี? <a href="/register" className="text-505050 hover:underline">สร้างบัญชีที่นี่</a></p>
+            <p>ยังไม่มีบัญชี? <Link href="/register" className="text-505050 hover:underline">สร้างบัญชีที่นี่</Link></p>
           </div>
           <div className='font-NotoSansThai py-1 text-center'>
             <a href='/home' className='text-xs text-bdbdbd hover:text-FF0000'>This is under development.</a>

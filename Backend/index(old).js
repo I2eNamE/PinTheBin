@@ -13,51 +13,48 @@ import bcrypt from 'bcrypt';
 const app = express();
 const port = 8080
 
-const oneDay = 1000 * 60 * 60 * 24;
-app.use(sessions({
-    secret: "SecretkeyPinTheBin",
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false
-}));
-app.use(cookieParser());
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }))
-
-
-// control 401 give web redirecto to /login page 
-// app.use((req, res, next) => {
-//     if (!req.session.userid && req.path !== "/login") {
-//         // Redirect to the login page if the user is not authenticated
-//         res.status(401).send({ error: true, message: "Unauthorized" });
-//     }
-//     next(); // Proceed to the next middleware or route
-// });
-
-
-// test webhook
-
+// const oneDay = 1000 * 60 * 60 * 24;
+// app.use(sessions({
+//     secret: "SecretkeyPinTheBin",
+//     saveUninitialized: true,
+//     cookie: { maxAge: oneDay },
+//     resave: false
+// }));
+// app.use(cookieParser());
+// app.use(cors());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }))
 
 
 // implement jwt
-const secretKey = process.env.secretkey
+const secretKey = process.env.secretKey
+
 const verifyToken = (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
+    console.log('req.headers', req.headers);
+    const authHeader = req.headers.authorization;
+
+    console.log('secretKey:', secretKey);
+    console.log('authHeader:', authHeader);
+
+    if (!authHeader) {
+        console.log('No token provided');
         return res.status(403).json({ error: true, message: 'Unauthorized: No token provided' });
     }
+
+    // Extract the token without the "Bearer" prefix
+    const token = authHeader.split(' ')[1];
+
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
+            console.log('Invalid token', err);
             return res.status(401).json({ error: true, message: 'Unauthorized: Invalid token' });
         }
+
+        console.log('Decoded token:', decoded);
         req.user = decoded;
         next();
     });
 };
-
-
-
 
 
 // create connection_data to database
@@ -88,7 +85,6 @@ app.get('/logout', (req, res) => {
 
 
 // start user_info table 
-
 app.get('/user', (req, res) => {
     let command = `SELECT * FROM user_info`;
     conn.query(command, (err, result) => {
@@ -177,7 +173,7 @@ app.post('/login', (req, res) => {
             return res.status(404).json({ error: true, message: 'Email or password is incorrect' });
         }
 
-        console.log('result password:', result[0].password)
+        // console.log('result password:', result[0].password)
         console.log('password:', password)
         const user = result[0];
 
@@ -241,9 +237,7 @@ app.patch('/changepassword', (req, res) => {
 
 
 
-
 // end user_info table and start bin_info table
-
 app.get('/bin', (reg, res) => {
     let command = `SELECT * FROM bin_info`;
     conn.query(command, (err, result) => {
