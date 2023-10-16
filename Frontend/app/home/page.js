@@ -12,6 +12,25 @@ import { markerdata as markers } from "./data/markerdata";
 import { SearchBar } from './components/searchbar';
 import "./components/style.css";
 
+import { getJwt } from 'next-auth/jwt';
+export async function getServerSideProps(context) {
+  const jwt = await getJwt(context);
+
+  if (!jwt) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    // props: { user: jwt },
+  };
+}
+
+
 export default function Home() {
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
   const [selectedBinData, setSelectedBinData] = useState(null);
