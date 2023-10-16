@@ -13,17 +13,10 @@ import bcrypt from 'bcrypt';
 const app = express();
 const port = 8080
 
-// const oneDay = 1000 * 60 * 60 * 24;
-// app.use(sessions({
-//     secret: "SecretkeyPinTheBin",
-//     saveUninitialized: true,
-//     cookie: { maxAge: oneDay },
-//     resave: false
-// }));
-// app.use(cookieParser());
-// app.use(cors());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
 
 
 // implement jwt
