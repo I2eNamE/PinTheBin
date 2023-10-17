@@ -10,9 +10,11 @@ import { ConfirmDelete } from './components/confirmdelete';
 import { BinNotFound } from './components/binnotfound';
 import Image from 'next/image';
 import './components/style.css';
-import axios from 'axios';
+import axios from "../../httpAxios";
+import router from 'next/navigation';
 
 export default function EditBin({ params }) {
+  const router = useRouter();
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [isConfirmDeleteVisible, setIsConfirmDeleteVisible] = useState(false);
   const [markerName, setMarkerName] = useState('');
@@ -111,6 +113,9 @@ export default function EditBin({ params }) {
       });
   }, [params.id]);
   
+  if (localStorage.getItem('token') == null){
+    router.push('/')
+  }
 
   const handleButtonStateChange = (newButtonStates) => {
     // setToggleButtonStates(newButtonStates); // Avoid this line

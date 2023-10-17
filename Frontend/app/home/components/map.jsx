@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
-import axios from "axios";
+import axios from "../../httpAxios";
 import { BinDetail } from "./bindetail";
+import { useRouter } from 'next/navigation'
 
 export const Map = ({ center, onMarkerClick }) => {
+  const router = useRouter();
   const [markers, setMarkers] = useState([]);
   const [activeMarker, setActiveMarker] = useState(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
@@ -16,7 +18,7 @@ export const Map = ({ center, onMarkerClick }) => {
     setActiveMarker(marker);
     onMarkerClick(marker); // Call the callback
   };
-  
+
 
   const handleOnLoad = (map) => {
     const bounds = new window.google.maps.LatLngBounds();
@@ -25,18 +27,17 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   const fetchBinData = (markerId) => {
-    axios.get(`http://localhost:8080/bin/${markerId}`)
-      .then(response => {
-        // Check if 'response.data' and 'response.data.response' exist
-        if (response.data && response.data.response && response.data.response[0]) {
-          setBinData(response.data.response[0]);
-        } else {
-          console.error("Invalid response structure:", response.data);
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching bin details:", error);
-      });
+    axios.get(`http://localhost:8080/bin/${markerId}`, {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+    .then(response => {
+      if (response.data && response.data.response && response.data.response[0]) {
+        setBinData(response.data.response[0]);
+      } else {
+        console.error("Invalid response structure:", response.data);
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching bin details:", error);
+    });
   };
 
   const defaultMapOptions = {
@@ -44,14 +45,27 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:8080/bin")
+    if (localStorage.getItem('token') == null){
+      router.push('/')
+    }
+    axios.get("http://localhost:8080/bin",
+      {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+      })
       .then(response => {
+        // Check if 'response.data' and 'response.data.response' exist
+        console.log("response::::::", response)
+        // if (response.status === 401) {
+        //   console.log("redirecting to login");
+        //   redirect('/')
+        //   return;
+        // }
         setMarkers(response.data.response);
       })
       .catch(error => {
         console.error("Error fetching marker data:", error);
       });
-  }, []);
+    }, []);
 
   return (
     <>
@@ -74,13 +88,13 @@ export const Map = ({ center, onMarkerClick }) => {
             onClick={() => handleActiveMarker(id)}
           >
             {selectedMarkerId === id && (
-                <InfoWindow onCloseClick={() => setSelectedMarkerId(null)}>
-                  <div>
-                    {location}
-                    {binData && <BinDetail onClose={() => setSelectedMarkerId(null)} binData={binData} />}
-                  </div>
-                </InfoWindow>
-              )}
+              <InfoWindow onCloseClick={() => setSelectedMarkerId(null)}>
+                <div>
+                  {location}
+                  {binData && <BinDetail onClose={() => setSelectedMarkerId(null)} binData={binData} />}
+                </div>
+              </InfoWindow>
+            )}
 
 
           </Marker>

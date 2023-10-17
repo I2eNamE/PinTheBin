@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { IoMdArrowRoundBack } from 'react-icons/io';
-import axios from 'axios';
+import axios from "../httpAxios";
 
 export const RegisterBox = () => {
   const [buttonContent, setButtonContent] = useState({ message: '', bgColor: ''});

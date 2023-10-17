@@ -6,9 +6,11 @@ import { BsFillPinMapFill } from 'react-icons/bs';
 import { ToggleButtons } from './components/togglebutton';
 import { getCurrentLocation } from '../home/utils/getcurrentlocation';
 import Image from 'next/image'
-import axios from "axios";
+import axios from "../httpAxios";
+import { useRouter } from 'next/navigation';
 
 export default function Addbin() {
+  const router = useRouter();
   const [buttonStates, setButtonStates] = useState(null);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [markerName, setMarkerName] = useState('');
@@ -41,7 +43,7 @@ export default function Addbin() {
       binType: binTypes,
       description: name,
     });
-
+    
     axios.post(url + 'bin', {
       location: locationName,
       lat: location.lat,
@@ -73,7 +75,7 @@ export default function Addbin() {
   };
   
 
-
+  
   // Function to get the user's location
   const getLocation = () => {
     getCurrentLocation(
@@ -85,9 +87,9 @@ export default function Addbin() {
       (error) => {
         console.error('Error getting user location:', error);
       }
-    );
+      );
   };
-
+  
   const handleButtonClick = () => {
     const newButtonStates = {
       ...buttonStates,
@@ -104,6 +106,9 @@ export default function Addbin() {
   useEffect(() => {
     // Call getLocation when the component mounts
     getLocation();
+    if (localStorage.getItem('token') == null){
+      router.push('/')
+    }
   }, []);
 
   return (

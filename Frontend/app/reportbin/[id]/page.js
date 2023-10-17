@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from "../../httpAxios";
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import Image from 'next/image'
 

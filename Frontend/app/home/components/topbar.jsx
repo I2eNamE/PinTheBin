@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MdMenu } from "react-icons/md";
 import "./style.css";
 import { SearchBar } from '../components/searchbar';
-import axios from 'axios';
+import axios from "../../httpAxios";
 
 export const Topbar = ({ isSidebarOpen, toggleSidebar, onLocationClick }) => {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);

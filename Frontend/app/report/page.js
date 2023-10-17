@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import Image from 'next/image'
-import axios from 'axios';
+import axios from "../httpAxios";
 
 export default function AppReport() {
   const [headerName, setHeaderName] = useState('');

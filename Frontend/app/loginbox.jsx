@@ -1,11 +1,13 @@
 'use client'
 
-import axios from "axios";
+import axios from "./httpAxios";
 import React from "react";
 import { useState } from "react";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 
 export const LoginBox = () => {
+  const router = useRouter()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonContent, setButtonContent] = useState({ message: '' });
@@ -27,14 +29,15 @@ export const LoginBox = () => {
             });
             console.log('Login successful:', response);
             // router.push('/home');
-            await axios.get(`${url}`, {
-              headers: {
-                Authorization: `Bearer ${response.data.token}`,
-              },
-            });
-            // router.push('/home');
+            // await axios.get(`${url}`, {
+            //   headers: {
+            //     Authorization: `Bearer ${response.data.token}`,
+            //   },
+            // });
+            router.push('/home');
         }
-    } catch (error) {
+      }
+     catch (error) {
         console.error('Login failed:', error);
         setButtonContent({
           message: 'Email or password is incorrect',

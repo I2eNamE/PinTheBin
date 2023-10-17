@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 export const ToggleButtons = ({ onButtonStateChange, initialButtonStates }) => {
+  const router = useRouter()
   const buttonColors = {
     blue_bin: 'bg-0021f5',
     yellow_bin: 'bg-ffc82f',
@@ -72,6 +74,10 @@ export const ToggleButtons = ({ onButtonStateChange, initialButtonStates }) => {
   useEffect(() => {
     onButtonStateChange(buttonStates);
   }, [buttonStates, onButtonStateChange]);
+
+    if (localStorage.getItem('token') == null){
+      router.push('/')
+    }
 
   return (
     <div className="grid grid-cols-2 gap-4">
