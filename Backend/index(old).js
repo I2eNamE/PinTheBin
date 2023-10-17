@@ -12,6 +12,8 @@ import bcrypt from 'bcrypt';
 
 const app = express();
 const port = 8080
+// implement jwt
+const secretKey = process.env.secretKey;
 
 
 app.use(cors());
@@ -19,35 +21,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
 
-// implement jwt
-const secretKey = process.env.secretKey
 
-const verifyToken = (req, res, next) => {
-    console.log('req.headers', req.headers);
-    const authHeader = req.headers.authorization;
-
-    console.log('secretKey:', secretKey);
-    console.log('authHeader:', authHeader);
-
-    if (!authHeader) {
-        console.log('No token provided');
-        return res.status(403).json({ error: true, message: 'Unauthorized: No token provided' });
-    }
-
-    // Extract the token without the "Bearer" prefix
-    const token = authHeader.split(' ')[1];
-
-    jwt.verify(token, secretKey, (err, decoded) => {
-        if (err) {
-            console.log('Invalid token', err);
-            return res.status(401).json({ error: true, message: 'Unauthorized: Invalid token' });
+//  wan to check jwt token before use other function except  /login
+app.use((req, res, next) => {
+    if (req.path !== "/login") {
+        const result = verifyToken(req, res, next);
+        if (result === true) {
+            next();
         }
-
-        console.log('Decoded token:', decoded);
-        req.user = decoded;
+    } else {
         next();
-    });
-};
+    }
+});
+
 
 
 // create connection_data to database
@@ -59,6 +45,8 @@ const conn = mysql.createConnection({
     }
 });
 
+
+
 // connect to database
 conn.connect(function (err) {
     if (err) throw err;
@@ -66,15 +54,46 @@ conn.connect(function (err) {
 });
 
 
+
+const verifyToken = (req, res, next) => {
+    let authorized = false;
+    console.log('req.headers', req.headers);
+    const authHeader = req.headers.authorization;
+
+    console.log('secretKey:', secretKey);
+    console.log('authHeader:', authHeader);
+    // console.log(!authHeader)
+    if (!authHeader) {
+        console.log('No token provided');
+        res.status(403).json({ error: true, message: 'Unauthorized: No token provided' });
+    }
+
+    // Extract the token without the "Bearer" prefix
+    const token = authHeader.split(' ')[1];
+    // console.log(token)
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            console.log('Invalid token', err);
+            res.status(401).json({ error: true, message: 'Unauthorized: Invalid token' });
+        } else {
+            console.log('Decoded token:', decoded);
+            req.user = decoded;
+            authorized = true;
+        }
+    });
+    return authorized;
+};
+
 // test rest api
 app.get('/test', (req, res) => {
     res.send("Hello world");
 })
 
 
-app.get('/logout', (req, res) => {
-    req.session.destroy();
-});
+// app.get('/logout', (req, res) => {
+//     req.session.destroy();
+// });
 
 
 // start user_info table 
@@ -155,7 +174,7 @@ app.post('/picture', (req, res) => {
 
 app.post('/login', (req, res) => {
     let { email, password } = req.body;
-    let command = `SELECT password FROM user_info WHERE email = ?`;
+    let command = `SELECT * FROM user_info WHERE email = ?`;
 
     conn.query(command, [email], async (err, result) => {
         if (err) {
@@ -177,7 +196,7 @@ app.post('/login', (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ error: true, message: 'Email or password is incorrect' });
         }
-        
+
 
         // Generate JWT
         const token = jwt.sign({ userId: user.id, userEmail: email }, secretKey, { expiresIn: '1h' });
@@ -270,34 +289,34 @@ app.post('/bin', (req, res) => {
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     conn.query(commandSearch, [lat, lng], (err, result) => {
-      if (err) {
-        throw err;
-      } else if (result.length !== 0) {
-        res.send({ error: true, message: "Bin has already been added to the database." });
-      } else {
-        // Initialize bin types
-        const binTypes = {
-          red_bin: false,
-          green_bin: false,
-          yellow_bin: false,
-          blue_bin: false,
-        };
-  
-        // Set bin types based on the received array
-        binType.forEach((type) => {
-          binTypes[type.toLowerCase()] = true;
-        });
-  
-        const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
-  
-        conn.query(commandAdd, values, (err, result) => {
-          if (err) {
+        if (err) {
             throw err;
-          } else {
-            res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
-          }
-        });
-      }
+        } else if (result.length !== 0) {
+            res.send({ error: true, message: "Bin has already been added to the database." });
+        } else {
+            // Initialize bin types
+            const binTypes = {
+                red_bin: false,
+                green_bin: false,
+                yellow_bin: false,
+                blue_bin: false,
+            };
+
+            // Set bin types based on the received array
+            binType.forEach((type) => {
+                binTypes[type.toLowerCase()] = true;
+            });
+
+            const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
+
+            conn.query(commandAdd, values, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.status(201).send({ error: false, message: "Bin added successfully.", result: result });
+                }
+            });
+        }
     });
 });
 
@@ -336,12 +355,12 @@ app.patch('/bin', (req, res) => {
             res.send({ error: false, message: "Update bin complete", result: result });
         }
     });
-  });
-  
+});
+
 app.delete("/bin/:id", (req, res) => {
     let binId = req.params.id;
     let commanddelete = `DELETE FROM bin_info WHERE id = ?`;
-    
+
     conn.query(commanddelete, [binId], (err, result) => {
         if (err) {
             console.error(err);
@@ -408,11 +427,11 @@ app.post('/report', (req, res) => {
     let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?);`;
     conn.query(commandSearch, [bin, category], (err, result) => {
         if (err) throw err;
-        else if (result.length !== 0) { 
-            res.send({ 
-                error: true, 
+        else if (result.length !== 0) {
+            res.send({
+                error: true,
                 message: "this report has been in database"
-            }) 
+            })
         }
         else {
             conn.query(commandAdd, [user_report, description, category, header, bin], (err, result) => {
