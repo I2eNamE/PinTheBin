@@ -23,6 +23,7 @@ export default function Addbin() {
     message: '',
   });
   const [errorMessage, setErrorMessage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   let url = 'http://localhost:8080/';
   
@@ -72,9 +73,30 @@ export default function Addbin() {
       console.log(error)
       console.log('Error: Bin has already been added to the database.');
     });
+
+    const fileName = `bin_${response.data.id}`;
+    // Upload the file
+    console.log('filename:',fileName)
+    uploadFile(fileName);
   };
   
-
+  const uploadFile = (fileName) => {
+    const formData = new FormData();
+    formData.append('fileInput', selectedFile); // assuming 'selectedFile' is the file selected by the user
+    console.log('AXIOS_POST_FILE')
+    axios.post(`${url}upload`, formData, {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data',
+        },
+    }).then((response) => {
+        console.log(response);
+        // Now you can handle the response as needed
+    }).catch((error) => {
+        console.log(error);
+        // Handle file upload error
+    });
+};
   
   // Function to get the user's location
   const getLocation = () => {
@@ -99,8 +121,9 @@ export default function Addbin() {
   };
   
   const handleFileChange = (e) => {
-    // Handle file changes here if needed
-    console.log('File selected:', e.target.files[0]);
+    const file = e.target.files[0];
+    console.log('File selected:', file);
+    setSelectedFile(file);
   };
 
   useEffect(() => {

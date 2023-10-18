@@ -145,15 +145,26 @@ const upload = multer({ storage });
 export default upload;
 
 // handle upload file
-app.post('/upload', upload.single('fileInput'), (err, req, res) => {
+app.post('/upload', upload.single('fileInput'), (req, res) => {
     if (req.fileValidationError) {
         return res.status(400).send({ error: true, message: req.fileValidationError });
     } else if (!req.file) {
         return res.status(400).send({ error: true, message: 'No file uploaded' });
     }
-    res.send({ error: false, message: 'File uploaded successfully' });
     
+    // Use the provided file name or generate a new one
+    const fileName = req.body.fileName || `bin_${Date.now()}`;
+
+    // Rename the file with the desired name
+    fs.rename(req.file.path, path.join(req.file.destination, fileName), (err) => {
+        if (err) {
+            return res.status(500).send({ error: true, message: 'Error renaming the file' });
+        }
+
+        res.send({ error: false, message: 'File uploaded successfully' });
+    });
 });
+
 
 
 
@@ -360,7 +371,8 @@ app.post('/bin', (req, res) => {
         if (err) {
             throw err;
         } else if (result.length !== 0) {
-            res.send({ error: true, message: "Bin has already been added to the database." });
+            const binId = result.insertId; // Get the ID of the inserted bin
+            res.status(201).send({ error: false, message: "Bin added successfully.", result: result, id: binId });
         } else {
             // Initialize bin types
             const binTypes = {
