@@ -39,7 +39,7 @@ export default function EditBin({ params }) {
       lng: location.lng,
       binType: binTypes,
       description: name,
-    })
+    },{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
       .then((response) => {
         console.log(response);
       })
@@ -54,7 +54,7 @@ export default function EditBin({ params }) {
   };
 
   const confirmDelete = () => {
-    axios.delete(`${url}bin/${params.id}`)
+    axios.delete(`${url}bin/${params.id}`,{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
       .then((response) => {
         console.log(response);
         setIsConfirmDeleteVisible(false);
@@ -84,7 +84,7 @@ export default function EditBin({ params }) {
   useEffect(() => {
     // Fetch bin data when component mounts
     console.log('Fetching bin data');
-    axios.get(`${url}bin/${params.id}`)
+    axios.get(`${url}bin/${params.id}`,{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
       .then((response) => {
         const binData = response.data.response[0];
         setLocationName(binData.location);

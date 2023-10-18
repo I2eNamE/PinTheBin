@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    if (req.path !== "/login") {
+    if (!(req.path === "/login" || req.path === "/register" || req.path === "/")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
             next();
@@ -96,6 +96,74 @@ app.get('/test', (req, res) => {
 // });
 
 
+
+
+
+
+
+
+// multer
+// import multer from 'multer';
+// const upload = multer({ dest: 'uploads' })
+
+// sample code
+// app.post('/upload', upload.single('photo'), (req, res) => {
+//     res.send(req.file)
+//   })
+
+// sample res
+// {
+//     "fieldname": "photo",
+//     "originalname": "Screen Shot 2565-07-14 at 22.26.37.png",
+//     "encoding": "7bit",
+//     "mimetype": "image/png",
+//     "destination": "uploads",
+//     "filename": "801ea9c5a8ee00fba92f0589fb8230e0",
+//     "path": "uploads/801ea9c5a8ee00fba92f0589fb8230e0",
+//     "size": 4243
+//   }
+
+
+
+// app.js
+
+import multer from 'multer';
+
+// Set up storage for uploaded files
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '../Frontend/public/data/uploads');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '_' + file.originalname);
+    }
+})
+
+// Create the multer instance
+const upload = multer({ storage });
+
+export default upload;
+
+// handle upload file
+app.post('/upload', upload.single('fileInput'), (req, res) => {
+    console.log('req of file :', req);
+    conn.query(err, result) => {
+        if (err) {
+            res.status(400).send({ error: true, message: err });
+        } else
+        res.send({ error: false, message: 'File uploaded successfully' });
+    }
+})
+
+
+
+
+
+
+
+
+
+
 // start user_info table 
 app.get('/user', (req, res) => {
     let command = `SELECT * FROM user_info`;
@@ -116,7 +184,7 @@ app.get('/user/:id', (req, res) => {
     })
 })
 
-app.post('/user', async (req, res) => {
+app.post('/register', async (req, res) => {
     let { email, name, password, confirmPassword } = req.body;
 
     // Check if passwords match

@@ -50,7 +50,7 @@ export default function Addbin() {
       lng: location.lng,
       binType: binTypes,
       description: name,
-    }).then((response) => {
+    },{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } }).then((response) => {
       console.log(response);
       if (response.status === 201) {
         console.log('Bin added successfully.');

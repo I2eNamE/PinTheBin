@@ -27,17 +27,17 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   const fetchBinData = (markerId) => {
-    axios.get(`http://localhost:8080/bin/${markerId}`, {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-    .then(response => {
-      if (response.data && response.data.response && response.data.response[0]) {
-        setBinData(response.data.response[0]);
-      } else {
-        console.error("Invalid response structure:", response.data);
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching bin details:", error);
-    });
+    axios.get(`http://localhost:8080/bin/${markerId}`, { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+      .then(response => {
+        if (response.data && response.data.response && response.data.response[0]) {
+          setBinData(response.data.response[0]);
+        } else {
+          console.error("Invalid response structure:", response.data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching bin details:", error);
+      });
   };
 
   const defaultMapOptions = {
@@ -45,7 +45,7 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem('token') == null){
+    if (localStorage.getItem('token') == null) {
       router.push('/')
     }
     axios.get("http://localhost:8080/bin",
@@ -65,7 +65,7 @@ export const Map = ({ center, onMarkerClick }) => {
       .catch(error => {
         console.error("Error fetching marker data:", error);
       });
-    }, []);
+  }, []);
 
   return (
     <>
