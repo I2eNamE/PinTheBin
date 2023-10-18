@@ -26,7 +26,9 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch(`http://localhost:8080/bin/${markerId}`);
+            const response = await fetch(`http://localhost:8080/bin/${markerId}`,{
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+              });
             const data = await response.json();
             setBinData(data.response[0]);
           } catch (error) {

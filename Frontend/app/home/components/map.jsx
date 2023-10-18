@@ -27,7 +27,10 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   const fetchBinData = (markerId) => {
-    axios.get(`http://localhost:8080/bin/${markerId}`, { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+    axios.get(`http://localhost:8080/bin/${markerId}`,
+      {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+      })
       .then(response => {
         if (response.data && response.data.response && response.data.response[0]) {
           setBinData(response.data.response[0]);

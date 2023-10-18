@@ -12,7 +12,7 @@ const BinTypes = ({ bins }) => {
       text: 'ขยะรีไซเคิล',
     },
     blue_bin: {
-      iconUrl: '/static/green_bin.png',
+      iconUrl: '/static/blue_bin.png',
       text: 'ขยะทั่วไป',
     },
     green_bin: {

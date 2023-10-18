@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    if (!(req.path === "/login" || req.path === "/register" || req.path === "/")) {
+    if (!(req.path === "/login" || req.path === "/register" )) {
         const result = verifyToken(req, res, next);
         if (result === true) {
             next();
@@ -145,15 +145,15 @@ const upload = multer({ storage });
 export default upload;
 
 // handle upload file
-app.post('/upload', upload.single('fileInput'), (req, res) => {
-    console.log('req of file :', req);
-    conn.query(err, result) => {
-        if (err) {
-            res.status(400).send({ error: true, message: err });
-        } else
-        res.send({ error: false, message: 'File uploaded successfully' });
+app.post('/upload', upload.single('fileInput'), (err, req, res) => {
+    if (req.fileValidationError) {
+        return res.status(400).send({ error: true, message: req.fileValidationError });
+    } else if (!req.file) {
+        return res.status(400).send({ error: true, message: 'No file uploaded' });
     }
-})
+    res.send({ error: false, message: 'File uploaded successfully' });
+    
+});
 
 
 

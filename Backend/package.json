@@ -2,10 +2,10 @@
   "name": "testsqlapi",
   "version": "1.0.0",
   "description": "",
-  "main": "index(old).js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index(old)"
+    "dev": "nodemon index"
   },
   "author": "",
   "license": "ISC",

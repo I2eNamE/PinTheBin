@@ -18,14 +18,14 @@ export const Topbar = ({ isSidebarOpen, toggleSidebar, onLocationClick }) => {
     axios.post('http://localhost:8080/bin/search', { 
       location: inputValue, 
       description: inputValue 
+    },{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+    .then(response => {
+      console.log('Search results:', response.data.response);
+      setSearchResults(response.data.response);
     })
-      .then(response => {
-        console.log('Search results:', response.data.response);
-        setSearchResults(response.data.response);
-      })
-      .catch(error => {
-        console.error('Error searching bins:', error);
-      });
+    .catch(error => {
+      console.error('Error searching bins:', error);
+    });
   };
 
   const handleLocationClick = (location) => {
