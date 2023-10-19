@@ -6,6 +6,7 @@ import BinTypes from "./bintype";
 import React, { useState, useEffect } from "react";
 import '../components/style.css';
 import Link from 'next/link';
+import Image from 'next/image'
 
 const formatDate = (timestamp) => {
     const options = {
@@ -56,9 +57,12 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
                         <BsChevronCompactDown size={50} color="#505050" />
                     </div>
                     <div className="bg-ffffff rounded-xl m-3">
-                        <img
-              src={binData.picture}
+                        <Image
+              src={`/data/uploads/${binData.picture}`}
               alt="Background"
+              width={0}
+              height={0}
+              sizes="100vw"
               className="rounded-xl w-full h-full object-cover"
             />
                     </div>

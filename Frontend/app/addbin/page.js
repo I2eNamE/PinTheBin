@@ -17,7 +17,6 @@ export default function Addbin() {
   const [locationName, setLocationName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
   const [binTypes, setBinTypes] = useState([]);
-  // const [binId, setbinId] = useState(0);
   const [buttonContent, setButtonContent] = useState({
     imgUrl: '',
     bgColor: '',
@@ -45,7 +44,7 @@ export default function Addbin() {
       binType: binTypes,
       description: name,
     });
-    
+
     axios.post(url + 'bin', {
       location: locationName,
       lat: location.lat,
@@ -53,19 +52,17 @@ export default function Addbin() {
       binType: binTypes,
       description: name,
     },{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } }).then((response) => {
-      console.log(response);
+      console.log('addbin response:', response);
       if (response.status === 201) {
         console.log('Bin added successfully.');
+        const insertedBinId = response.data.result.insertId;
+        console.log('get bin id', insertedBinId);
         setButtonContent({
           imgUrl: '/static/Checkmark.png',
           bgColor: 'bg-39da00',
+          message: 'Bin added successfully.',
         });
-
-        // console.log('binId :', binId);
-        // console.log(response.data.result.insertId);
-        // console.log(typeof(response.data.result.insertId));
-        // console.log(typeof(response.data.result.insertId))        // console.log(typeof(response.data.result.insertId))e.data.result.insertId))
-        // console.log(thisisbinId)
+        uploadFile(`bin_${insertedBinId}`, insertedBinId);
         // window.location.href = '/home';
       }
       else {
@@ -77,31 +74,8 @@ export default function Addbin() {
       }
     }).catch((error) => {
       console.log(error)
-      console.log('Error: Bin has already been added to the database.');
-    });
-
-  //   const fileName = `bin_${binId}`;
-  //   // Upload the file
-  //   console.log('filename:',fileName)
-  //   uploadFile(fileName);
-
-  // const uploadFile = (fileName) => {
-  //   const formData = new FormData();
-  //   formData.append('fileInput', selectedFile); // assuming 'selectedFile' is the file selected by the user
-  //   console.log('AXIOS_POST_FILE')
-  //   axios.post(`${url}upload`, formData, {
-  //       headers: {
-  //           'Authorization': 'Bearer ' + localStorage.getItem('token'),
-  //           'Content-Type': 'multipart/form-data',
-  //       },
-  //   }).then((response) => {
-  //       console.log(response);
-  //       // Now you can handle the response as needed
-  //   }).catch((error) => {
-  //       console.log(error);
-  //       // Handle file upload error
-  //   });
-};
+    });    
+  };
   
   // Function to get the user's location
   const getLocation = () => {
@@ -129,6 +103,26 @@ export default function Addbin() {
     const file = e.target.files[0];
     console.log('File selected:', file);
     setSelectedFile(file);
+  };
+
+  const uploadFile = (fileName, binId) => {
+    const formData = new FormData();
+    formData.append('fileInput', selectedFile); // assuming 'selectedFile' is the file selected by the user
+    formData.append('fileName', fileName);
+    formData.append('binId', binId);
+
+    axios.post(`${url}upload`, formData, {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data',
+        },
+    }).then((response) => {
+        console.log(response);
+
+    }).catch((error) => {
+        console.log(error);
+
+    });
   };
 
   useEffect(() => {

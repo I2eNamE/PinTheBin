@@ -3,11 +3,13 @@ import mysql from 'mysql';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import path from 'path';
 
 import https from 'https';
 import 'dotenv/config'
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import multer from 'multer';
 
 const app = express();
 const port = 8080
@@ -95,38 +97,7 @@ app.get('/test', (req, res) => {
 // });
 
 
-
-
-
-
-
-
-// multer
-// import multer from 'multer';
-// const upload = multer({ dest: 'uploads' })
-
-// sample code
-// app.post('/upload', upload.single('photo'), (req, res) => {
-//     res.send(req.file)
-//   })
-
-// sample res
-// {
-//     "fieldname": "photo",
-//     "originalname": "Screen Shot 2565-07-14 at 22.26.37.png",
-//     "encoding": "7bit",
-//     "mimetype": "image/png",
-//     "destination": "uploads",
-//     "filename": "801ea9c5a8ee00fba92f0589fb8230e0",
-//     "path": "uploads/801ea9c5a8ee00fba92f0589fb8230e0",
-//     "size": 4243
-//   }
-
-
-
-// app.js
-
-import multer from 'multer';
+// handle upload file
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
@@ -152,15 +123,28 @@ app.post('/upload', upload.single('fileInput'), (req, res) => {
     }
     
     // Use the provided file name or generate a new one
-    const fileName = req.body.fileName || `bin_${Date.now()}`;
+    const fileNameWithExtension = `${req.body.fileName}${path.extname(req.file.originalname)}` || `bin_${Date.now()}${path.extname(req.file.originalname)}`;
+    console.log('fileName:', fileNameWithExtension);
 
     // Rename the file with the desired name
-    fs.rename(req.file.path, path.join(req.file.destination, fileName), (err) => {
+    fs.rename(req.file.path, path.join(req.file.destination, fileNameWithExtension), (err) => {
         if (err) {
             return res.status(500).send({ error: true, message: 'Error renaming the file' });
         }
 
-        res.send({ error: false, message: 'File uploaded successfully' });
+        // Update the 'picture' field in the bin_info table
+        const binId = req.body.binId; // Add the binId in your frontend code
+        const updateCommand = `UPDATE bin_info SET picture = ? WHERE id = ?`;
+        console.log('fileNameWithExtension:', fileNameWithExtension);
+        console.log('binId:', binId);
+
+        conn.query(updateCommand, [fileNameWithExtension, binId], (updateErr, updateResult) => {
+            if (updateErr) {
+                return res.status(500).send({ error: true, message: 'Error updating bin_info table' });
+            }
+
+            res.send({ error: false, message: 'File uploaded and bin_info updated successfully', result: updateResult });
+        });
     });
 });
 
@@ -365,13 +349,11 @@ app.post('/bin', (req, res) => {
     let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;
     let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
     conn.query(commandSearch, [lat, lng], (err, result) => {
         if (err) {
             throw err;
         } else if (result.length !== 0) {
-            const binId = result.insertId; // Get the ID of the inserted bin
-            res.status(201).send({ error: false, message: "Bin added successfully.", result: result, id: binId });
+            res.send({ error: true, message: "Bin has already been added to the database." , result: result});
         } else {
             // Initialize bin types
             const binTypes = {
@@ -380,14 +362,11 @@ app.post('/bin', (req, res) => {
                 yellow_bin: false,
                 blue_bin: false,
             };
-
             // Set bin types based on the received array
             binType.forEach((type) => {
                 binTypes[type.toLowerCase()] = true;
             });
-
             const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
-
             conn.query(commandAdd, values, (err, result) => {
                 if (err) {
                     throw err;
