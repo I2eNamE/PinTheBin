@@ -36,6 +36,47 @@ export default function Addbin() {
   };
 
   const addMarkerToMap = (locationName, name, location, binTypes) => {
+    if (!locationName) {
+      setButtonContent({
+        imgUrl: '/static/Cancel.png',
+        bgColor: 'bg-ff5151',
+        message: 'please fill in the location name',
+      });
+      return;
+    }
+    if (!markerName) {
+      setButtonContent({
+        imgUrl: '/static/Cancel.png',
+        bgColor: 'bg-ff5151',
+        message: 'please fill in the description',
+      });
+      return;
+    }
+    if (location.lat === 0 && location.lng === 0) {
+      setButtonContent({
+        imgUrl: '/static/Cancel.png',
+        bgColor: 'bg-ff5151',
+        message: 'please select a location',
+      });
+      return;
+    }
+    if (binTypes.length === 0) {
+      setButtonContent({
+        imgUrl: '/static/Cancel.png',
+        bgColor: 'bg-ff5151',
+        message: 'please select a bin type',
+      });
+      return;
+    }
+    if (selectedFile === null) {
+      setButtonContent({
+        imgUrl: '/static/Cancel.png',
+        bgColor: 'bg-ff5151',
+        message: 'please select a file',
+      });
+      return;
+    }
+    
     // console.log("binTypes", binTypes);
     console.log("post: ", {
       location: locationName,
@@ -63,7 +104,7 @@ export default function Addbin() {
           message: 'Bin added successfully.',
         });
         uploadFile(`bin_${insertedBinId}`, insertedBinId);
-        // window.location.href = '/home';
+        window.location.href = '/home';
       }
       else {
       setButtonContent({
@@ -220,6 +261,31 @@ export default function Addbin() {
         {buttonContent.message === 'Bin has already been added to the database.' && (
           <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
             ถังขยะนี้มีอยู่แล้ว
+          </p>
+        )}
+        {buttonContent.message === 'please select a bin type' && (
+          <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+            กรุณาเลือกประเภทขยะ
+          </p>
+        )}
+        {buttonContent.message === 'please select a file' && (
+          <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+            กรุณาเลือกรูปภาพ
+          </p>
+        )}
+        {buttonContent.message === 'please fill in the description' && (
+          <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+            กรุณากรอกคำอธิบายเพิ่มเติม
+          </p>
+        )}
+        {buttonContent.message === 'please fill in the location name' && (
+          <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+            กรุณากรอกชื่อสถานที่
+          </p>
+        )}
+        {buttonContent.message === 'please select a location' && (
+          <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
+            กรุณาเลือกตำแหน่ง
           </p>
         )}
         <button
