@@ -17,6 +17,7 @@ export default function Addbin() {
   const [locationName, setLocationName] = useState('');
   const [locationValue, setLocationValue] = useState({ lat: 0, lng: 0 });
   const [binTypes, setBinTypes] = useState([]);
+  // const [binId, setbinId] = useState(0);
   const [buttonContent, setButtonContent] = useState({
     imgUrl: '',
     bgColor: '',
@@ -58,9 +59,14 @@ export default function Addbin() {
         setButtonContent({
           imgUrl: '/static/Checkmark.png',
           bgColor: 'bg-39da00',
-          message: 'Bin added successfully.',
         });
-        window.location.href = '/home';
+
+        // console.log('binId :', binId);
+        // console.log(response.data.result.insertId);
+        // console.log(typeof(response.data.result.insertId));
+        // console.log(typeof(response.data.result.insertId))        // console.log(typeof(response.data.result.insertId))e.data.result.insertId))
+        // console.log(thisisbinId)
+        // window.location.href = '/home';
       }
       else {
       setButtonContent({
@@ -74,28 +80,27 @@ export default function Addbin() {
       console.log('Error: Bin has already been added to the database.');
     });
 
-    const fileName = `bin_${response.data.id}`;
-    // Upload the file
-    console.log('filename:',fileName)
-    uploadFile(fileName);
-  };
-  
-  const uploadFile = (fileName) => {
-    const formData = new FormData();
-    formData.append('fileInput', selectedFile); // assuming 'selectedFile' is the file selected by the user
-    console.log('AXIOS_POST_FILE')
-    axios.post(`${url}upload`, formData, {
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            'Content-Type': 'multipart/form-data',
-        },
-    }).then((response) => {
-        console.log(response);
-        // Now you can handle the response as needed
-    }).catch((error) => {
-        console.log(error);
-        // Handle file upload error
-    });
+  //   const fileName = `bin_${binId}`;
+  //   // Upload the file
+  //   console.log('filename:',fileName)
+  //   uploadFile(fileName);
+
+  // const uploadFile = (fileName) => {
+  //   const formData = new FormData();
+  //   formData.append('fileInput', selectedFile); // assuming 'selectedFile' is the file selected by the user
+  //   console.log('AXIOS_POST_FILE')
+  //   axios.post(`${url}upload`, formData, {
+  //       headers: {
+  //           'Authorization': 'Bearer ' + localStorage.getItem('token'),
+  //           'Content-Type': 'multipart/form-data',
+  //       },
+  //   }).then((response) => {
+  //       console.log(response);
+  //       // Now you can handle the response as needed
+  //   }).catch((error) => {
+  //       console.log(error);
+  //       // Handle file upload error
+  //   });
 };
   
   // Function to get the user's location

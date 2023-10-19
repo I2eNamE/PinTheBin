@@ -30,9 +30,7 @@ export default function Profile() {
         console.log('Password changed:', { oldPassword, newPassword, confirmNewPassword });
     };
 
-    const deleteAccount = () => {
-        console.log('Account deleted');
-    };
+    
 
     return (
         <div className="bg-f4f4f4 p-8 min-h-screen font-NotoSansThai font-medium">

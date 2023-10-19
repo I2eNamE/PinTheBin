@@ -3,8 +3,7 @@ import mysql from 'mysql';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import sessions from 'express-session';
-import cookieParser from "cookie-parser";
+
 import https from 'https';
 import 'dotenv/config'
 import jwt from 'jsonwebtoken';
@@ -24,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    if (!(req.path === "/login" || req.path === "/register" )) {
+    if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" )) {
         const result = verifyToken(req, res, next);
         if (result === true) {
             next();
@@ -234,27 +233,27 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/picture', (req, res) => {
-    let { id, path } = req.body;
-    let command = `UPDATE user_info
-    SET picture = ? WHERE id = ?;`;
-    conn.query(command, [path, id], (err, result) => {
-        if (err) throw err;
-        else {
-            res.send({
-                error: false,
-                message: "update picture complete",
-                result: result
-            })
-        }
-    })
+// app.post('/picture', (req, res) => {
+//     let { id, path } = req.body;
+//     let command = `UPDATE user_info
+//     SET picture = ? WHERE id = ?;`;
+//     conn.query(command, [path, id], (err, result) => {
+//         if (err) throw err;
+//         else {
+//             res.send({
+//                 error: false,
+//                 message: "update picture complete",
+//                 result: result
+//             })
+//         }
+//     })
 
-})
+// })
 
 app.post('/login', (req, res) => {
     let { email, password } = req.body;
     let command = `SELECT * FROM user_info WHERE email = ?`;
-
+    
     conn.query(command, [email], async (err, result) => {
         if (err) {
             return res.status(500).json({ error: true, message: 'Internal Server Error' });
@@ -502,7 +501,9 @@ app.get('/report/:id', (req, res) => {
 
 // Report bin
 app.post('/report', (req, res) => {
-    let { user_report, description = null, category, header, bin } = req.body;
+    let token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, secretKey);
+    let { description = null, category, header, bin } = req.body;
     let commandSearch = `Select * from report where  bin = ? and category = ? ;`
     let commandAdd = `INSERT INTO report (user_report, description, category, header, bin) VALUES (?,?,?,?,?);`;
     conn.query(commandSearch, [bin, category], (err, result) => {
@@ -514,7 +515,7 @@ app.post('/report', (req, res) => {
             })
         }
         else {
-            conn.query(commandAdd, [user_report, description, category, header, bin], (err, result) => {
+            conn.query(commandAdd, [decoded.userId, description, category, header, bin], (err, result) => {
                 if (err) throw err;
                 else {
                     res.status(201).send({
@@ -566,10 +567,13 @@ app.get('/appReport/:id', (req, res) => {
 })
 
 app.post('/appReport', (req, res) => {
-    let { header, category, description = null, user } = req.body;
+    let token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, secretKey);
+    let { header, category, description = null,  } = req.body;
+    
     let commandSearch = `SELECT * FROM app_report WHERE header = ? and user = ? ;`;
     let commandAdd = `INSERT INTO app_report(header,category,description,user) VALUES (?,?,?,?)`;
-    conn.query(commandSearch, [header, user], (err, result) => {
+    conn.query(commandSearch, [header, decoded.userId], (err, result) => {
         if (err) throw err;
         else if (result.length !== 0) {
             res.send({
@@ -578,7 +582,7 @@ app.post('/appReport', (req, res) => {
             })
         }
         else {
-            conn.query(commandAdd, [header, category, description, user], (err, result) => {
+            conn.query(commandAdd, [header, category, description, decoded.userId], (err, result) => {
                 if (err) throw err;
                 else {
                     res.status(201).send({

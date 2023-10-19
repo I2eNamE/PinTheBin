@@ -46,7 +46,7 @@ const ReportBin = ({ params }) => {
       }
       
       const response = await axios.post('http://localhost:8080/report', {
-        user_report: '10', // Replace with actual user ID or username
+         // Replace with actual user ID or username
         description: reportContent,
         category: reportCategory,
         header: headerName, // Replace with actual header
