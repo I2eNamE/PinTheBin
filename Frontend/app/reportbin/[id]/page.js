@@ -51,6 +51,8 @@ const ReportBin = ({ params }) => {
         category: reportCategory,
         header: headerName, // Replace with actual header
         bin: params.id, // Replace with actual bin ID or name
+      },{
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       });
 
       console.log(response);

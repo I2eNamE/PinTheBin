@@ -49,6 +49,8 @@ export default function AppReport() {
         description: reportContent,
         category: reportCategory,
         header: headerName, // Replace with actual header
+      },{
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       });
 
       console.log(response);
