@@ -10,7 +10,7 @@ export const ForgotPasswordBox = () => {
             <h2 className="text-3xl">ลืมรหัสผ่าน</h2>
             <div className="w-8"></div> {/* Add an empty div for spacing */}
         </div>
-      <form>
+      {/* <form>
         <div className="mb-4">
           <label htmlFor="email" className="block text-xl text-gray-600">อีเมล</label>
           <input
@@ -29,7 +29,10 @@ export const ForgotPasswordBox = () => {
             รีเซ็ตรหัสผ่าน
           </button>
         </div>
-      </form>
+      </form> */}
+    <div className="mb-4 font-NotoSansThai">
+        โปรดติดต่อเจ้าหน้าที่ เพื่อทำการรีเซ็ต
+    </div>
     </div>
   );
 };
