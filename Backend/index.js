@@ -347,7 +347,7 @@ app.post('/bin/search', (req, res) => {
 app.post('/bin', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, secretKey);
-    const UserId = decoded.UserId;
+    const UserId = decoded.userId;
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
     let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;
     let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin,userUpdate) 
