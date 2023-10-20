@@ -226,7 +226,7 @@ export default function EditBin({ params }) {
               editMarkerOnMap(locationName, markerName, locationValue, binTypes);
               setLocationValue({ lat: 0, lng: 0 });
               setIsButtonClicked(true);
-              // window.location.href = '/home';
+              window.location.href = '/home';
             }}
             className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
               isButtonClicked ? 'bg-39da00 text-ffffff' : 'bg-717171 text-ffffff hover:scale-105'
