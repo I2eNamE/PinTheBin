@@ -17,7 +17,9 @@ const formatDate = (timestamp) => {
         hour: '2-digit',
         minute: '2-digit',
     };
-    const formattedDate = new Date(timestamp).toLocaleString('en-GB', options);
+    const date = new Date(timestamp);
+    date.setHours(date.getHours() + 7); // Add 7 hours to the date
+    const formattedDate = date.toLocaleString('en-GB', options);
     return formattedDate;
 };
 
