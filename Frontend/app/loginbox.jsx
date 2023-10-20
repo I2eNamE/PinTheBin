@@ -99,7 +99,7 @@ export const LoginBox = () => {
             <p>ยังไม่มีบัญชี? <Link href="/register" className="text-505050 hover:underline">สร้างบัญชีที่นี่</Link></p>
           </div>
           <div className='font-NotoSansThai py-1 text-center'>
-            <a href='/home' className='text-xs text-bdbdbd hover:text-FF0000'>This is under development.</a>
+            <p className='text-xs text-bdbdbd'>Version 1.0</p>
           </div>
         </form>
       </div>
