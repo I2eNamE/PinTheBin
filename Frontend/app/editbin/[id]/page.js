@@ -23,12 +23,7 @@ export default function EditBin({ params }) {
   const [binData, setBinData] = useState(null);
   const [toggleButtonStates, setToggleButtonStates] = useState({});
   const [isBinNotFoundVisible, setIsBinNotFoundVisible] = useState(false);
-  const [buttonContent, setButtonContent] = useState({
-    imgUrl: '',
-    bgColor: '',
-    message: '',
-  });
-  const [selectedFile, setSelectedFile] = useState(null);
+
 
   let url = 'http://localhost:8080/';
   
@@ -39,46 +34,6 @@ export default function EditBin({ params }) {
   };
 
   const editMarkerOnMap = (locationName, name, location, binTypes) => {
-    if (!locationName) {
-      setButtonContent({
-        imgUrl: '/static/Cancel.png',
-        bgColor: 'bg-ff5151',
-        message: 'please fill in the location name',
-      });
-      return;
-    }
-    if (!markerName) {
-      setButtonContent({
-        imgUrl: '/static/Cancel.png',
-        bgColor: 'bg-ff5151',
-        message: 'please fill in the description',
-      });
-      return;
-    }
-    if (location.lat === 0 && location.lng === 0) {
-      setButtonContent({
-        imgUrl: '/static/Cancel.png',
-        bgColor: 'bg-ff5151',
-        message: 'please select a location',
-      });
-      return;
-    }
-    if (binTypes.length === 0) {
-      setButtonContent({
-        imgUrl: '/static/Cancel.png',
-        bgColor: 'bg-ff5151',
-        message: 'please select a bin type',
-      });
-      return;
-    }
-    if (selectedFile === null) {
-      setButtonContent({
-        imgUrl: '/static/Cancel.png',
-        bgColor: 'bg-ff5151',
-        message: 'please select a file',
-      });
-      return;
-    }
     axios.patch(url + 'bin', {
       location: locationName,
       lat: location.lat,
@@ -88,29 +43,10 @@ export default function EditBin({ params }) {
     },{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
       .then((response) => {
         console.log(response);
-        uploadFile(`bin_${params.id}`, params.id);
       })
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  const uploadFile = (fileName, binId) => {
-    const formData = new FormData();
-    formData.append('fileInput', selectedFile);
-    formData.append('fileName', fileName);
-    formData.append('binId', binId);
-
-    axios.post(`${url}upload`, formData, {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.log(error);
-    });
   };
 
   const deleteMarkerOnMap = () => {
@@ -141,11 +77,8 @@ export default function EditBin({ params }) {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log('File selected:', file);
-    setSelectedFile(file);
+    console.log('File selected:', e.target.files[0]);
   };
-  
 
   useEffect(() => {
     // Fetch bin data when component mounts
@@ -287,32 +220,7 @@ export default function EditBin({ params }) {
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center mt-4">
-          {buttonContent.message === 'Bin has already been added to the database.' && (
-            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
-              ถังขยะนี้มีอยู่แล้ว
-            </p>
-          )}
-          {buttonContent.message === 'please select a bin type' && (
-            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
-              กรุณาเลือกประเภทขยะ
-            </p>
-          )}
-          {buttonContent.message === 'please fill in the description' && (
-            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
-              กรุณากรอกคำอธิบายเพิ่มเติม
-            </p>
-          )}
-          {buttonContent.message === 'please fill in the location name' && (
-            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
-              กรุณากรอกชื่อสถานที่
-            </p>
-          )}
-          {buttonContent.message === 'please select a location' && (
-            <p className="text-sm mb-2 text-FF0000 text-white p-2 rounded-md">
-              กรุณาเลือกตำแหน่ง
-            </p>
-          )}
+        <div className="mt-4 flex justify-center">
           <button
             onClick={() => {
               editMarkerOnMap(locationName, markerName, locationValue, binTypes);
