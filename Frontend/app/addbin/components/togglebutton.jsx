@@ -75,9 +75,9 @@ export const ToggleButtons = ({ onButtonStateChange, initialButtonStates }) => {
     onButtonStateChange(buttonStates);
   }, [buttonStates, onButtonStateChange]);
 
-    if (localStorage.getItem('token') == null){
-      router.push('/')
-    }
+  // if (localStorage.getItem('token') == null){
+  //   router.push('/')
+  // }
 
   return (
     <div className="grid grid-cols-2 gap-4">

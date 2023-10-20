@@ -103,7 +103,7 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
                             <BinTypes bins={activeBinTypes} />
                         </div>
                         <p className="flex justify-center text-base font-thin pl-2 mt-5">
-                            แก้ไขล่าสุดเมื่อ {formatDate(binData.date)}
+                            แก้ไขล่าสุดเมื่อ {formatDate(binData.date)} โดย {binData.name}
                         </p>
                     </div>
                 </div>

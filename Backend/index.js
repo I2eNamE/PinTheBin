@@ -323,7 +323,7 @@ app.get('/bin', (reg, res) => {
 
 app.get("/bin/:id", (req, res) => {
     let id = req.params.id;
-    let command = `SELECT * FROM bin_info WHERE id = ?;`; // TODO: Sanitize sql query
+    let command = `SELECT * FROM bin_info inner join user_info ON bin_info.userUpdate = user_info.id WHERE bin_info.id = ?;`; // TODO: Sanitize sql query
     conn.query(command, [id], (err, result) => {
         if (err) throw err; else if (result.length === 0) {
             res.status(404).send({ error: true, message: `bin id ${id} is not found` })
@@ -345,10 +345,13 @@ app.post('/bin/search', (req, res) => {
 });
 
 app.post('/bin', (req, res) => {
+    let token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, secretKey);
+    const UserId = decoded.UserId;
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
     let commandSearch = `SELECT * FROM bin_info WHERE lat = ? and lng = ?`;
-    let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    let commandAdd = `INSERT INTO bin_info (location, lat, lng, description, picture, red_bin, green_bin, yellow_bin, blue_bin,userUpdate) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)`;
     conn.query(commandSearch, [lat, lng], (err, result) => {
         if (err) {
             throw err;
@@ -366,7 +369,7 @@ app.post('/bin', (req, res) => {
             binType.forEach((type) => {
                 binTypes[type.toLowerCase()] = true;
             });
-            const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin];
+            const values = [location, lat, lng, description, picture, binTypes.red_bin, binTypes.green_bin, binTypes.yellow_bin, binTypes.blue_bin,UserId];
             conn.query(commandAdd, values, (err, result) => {
                 if (err) {
                     throw err;
@@ -379,6 +382,11 @@ app.post('/bin', (req, res) => {
 });
 
 app.patch('/bin', (req, res) => {
+    console.log("try update bin")
+    let token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, secretKey);
+    const UserId = decoded.UserId;
+    console.log(token,decoded,UserId);
     let { location, lat, lng, description = null, picture = null, binType } = req.body;
     // Initialize bin types
     const binTypes = {
@@ -393,7 +401,7 @@ app.patch('/bin', (req, res) => {
     });
     let command = `UPDATE bin_info 
                   SET date = CURRENT_TIMESTAMP,location = ?, description = ?, red_bin = ?,
-                  green_bin = ?, yellow_bin = ?, blue_bin = ?, picture = ?
+                  green_bin = ?, yellow_bin = ?, blue_bin = ?, picture = ? , userUpdate = ?
                   WHERE lat = ? AND lng = ?;`;
     const values = [
         location,
@@ -403,6 +411,7 @@ app.patch('/bin', (req, res) => {
         binTypes.yellow_bin,
         binTypes.blue_bin,
         picture,
+        UserId,
         lat,
         lng,
     ];

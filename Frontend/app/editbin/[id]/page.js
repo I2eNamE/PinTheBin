@@ -100,7 +100,7 @@ export default function EditBin({ params }) {
     formData.append('fileInput', selectedFile);
     formData.append('fileName', fileName);
     formData.append('binId', binId);
-  
+
     axios.post(`${url}upload`, formData, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -117,7 +117,6 @@ export default function EditBin({ params }) {
     console.log('Deleting marker on the map');
     setIsConfirmDeleteVisible(true);
   };
-
   const confirmDelete = () => {
     axios.delete(`${url}bin/${params.id}`,{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
       .then((response) => {
@@ -129,7 +128,6 @@ export default function EditBin({ params }) {
         console.error(error);
       });
   };
-
   const getLocation = () => {
     getCurrentLocation(
       (userLocation) => {
@@ -320,7 +318,7 @@ export default function EditBin({ params }) {
               editMarkerOnMap(locationName, markerName, locationValue, binTypes);
               setLocationValue({ lat: 0, lng: 0 });
               setIsButtonClicked(true);
-              window.location.href = '/home';
+              // window.location.href = '/home';
             }}
             className={`flex items-center justify-center p-4 w-60 py-2 px-4 rounded-lg transition-all focus:outline-none ${
               isButtonClicked ? 'bg-39da00 text-ffffff' : 'bg-717171 text-ffffff hover:scale-105'
