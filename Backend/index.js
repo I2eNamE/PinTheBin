@@ -382,12 +382,12 @@ app.post('/bin', (req, res) => {
 });
 
 app.patch('/bin', (req, res) => {
-    console.log("try update bin")
     let token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, secretKey);
-    const UserId = decoded.UserId;
-    console.log(token,decoded,UserId);
-    let { location, lat, lng, description = null, picture = null, binType } = req.body;
+    const UserId = decoded.userId;
+    console.log(token, decoded, UserId);
+    let { location, lat, lng, description = null, picture, binType } = req.body;
+    let oldpicture = picture;
     // Initialize bin types
     const binTypes = {
         red_bin: false,
@@ -395,34 +395,46 @@ app.patch('/bin', (req, res) => {
         yellow_bin: false,
         blue_bin: false,
     };
-    // Set bin types based on the received array
-    binType.forEach((type) => {
-        binTypes[`${type.toLowerCase()}`] = true;
-    });
-    let command = `UPDATE bin_info 
-                  SET date = CURRENT_TIMESTAMP,location = ?, description = ?, red_bin = ?,
-                  green_bin = ?, yellow_bin = ?, blue_bin = ?, picture = ? , userUpdate = ?
-                  WHERE lat = ? AND lng = ?;`;
-    const values = [
-        location,
-        description,
-        binTypes.red_bin,
-        binTypes.green_bin,
-        binTypes.yellow_bin,
-        binTypes.blue_bin,
-        picture,
-        UserId,
-        lat,
-        lng,
-    ];
-    conn.query(command, values, (err, result) => {
+    conn.query("SELECT picture from bin_info Where lat = ? AND lng = ?", [lat, lng], (err, result) => {
         if (err) {
             throw err;
         } else {
-            res.send({ error: false, message: "Update bin complete", result: result });
+            oldpicture = result[0].picture;
+
+            // Set bin types based on the received array
+            binType.forEach((type) => {
+                binTypes[`${type.toLowerCase()}`] = true;
+            });
+
+            let commandAdd = `UPDATE bin_info 
+                  SET date = CURRENT_TIMESTAMP, location = ?, description = ?, red_bin = ?,
+                  green_bin = ?, yellow_bin = ?, blue_bin = ?, picture = ? , userUpdate = ?
+                  WHERE lat = ? AND lng = ?;`;
+
+            let values = [
+                location,
+                description,
+                binTypes.red_bin,
+                binTypes.green_bin,
+                binTypes.yellow_bin,
+                binTypes.blue_bin,
+                oldpicture,
+                UserId,
+                lat,
+                lng,
+            ];
+
+            conn.query(commandAdd, values, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.send({ error: false, message: "Update bin complete", result: result });
+                }
+            });
         }
     });
 });
+
 
 app.delete("/bin/:id", (req, res) => {
     let binId = req.params.id;
