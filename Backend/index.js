@@ -25,8 +25,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
