@@ -1,15 +1,15 @@
-import fs from 'fs';
-import mysql from 'mysql';
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import path from 'path';
+const fs = require('fs');
+const mysql = require('mysql');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
 
-import https from 'https';
-import 'dotenv/config'
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import multer from 'multer';
+const https = require('https');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const multer = require('multer');
 
 const app = express();
 const port = 8080
@@ -111,8 +111,6 @@ const storage = multer.diskStorage({
 
 // Create the multer instance
 const upload = multer({ storage });
-
-export default upload;
 
 // handle upload file
 app.post('/upload', upload.single('fileInput'), (req, res) => {
@@ -602,7 +600,7 @@ app.listen(port, () => {
     console.log(`server running on port ${port}`)
 })
 
-
+module.exports = app;
 
 // https
 //     .createServer({
