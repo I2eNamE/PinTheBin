@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test")) {
+    if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test" || req.path === "/user")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
             next();
@@ -34,6 +34,30 @@ app.use((req, res, next) => {
         next();
     }
 });
+
+const allowCors = fn => async (req, res) => {
+    console.log('Run allowCors')
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    // another common pattern
+    // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    )
+    if (req.method === 'OPTIONS') {
+      res.status(200).end()
+      return
+    }
+    return await fn(req, res)
+  }
+  
+  const handler = (req, res) => {
+    const d = new Date()
+    res.end(d.toString())
+  }
+  
 
 // create connection_data to database
 const certPath = path.join(__dirname, './cert.pem');
@@ -599,7 +623,7 @@ app.listen(port, () => {
     console.log(`server running`)
 })
 
-module.exports = app;
+module.exports = allowCors(app);
 
 // https
 //     .createServer({
