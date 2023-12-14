@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" )) {
+    if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
             next();
@@ -88,7 +88,7 @@ const verifyToken = (req, res, next) => {
 
 // test rest api
 app.get('/test', (req, res) => {
-    res.send("Hello world");
+    res.send("Hello world, API works!");
 })
 
 
