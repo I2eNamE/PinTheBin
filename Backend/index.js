@@ -12,16 +12,12 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 
 const app = express();
-const port = 443
+const port = 80
 // implement jwt
 const secretKey = process.env.secretKey;
 
-app.use(
-    cors({
-      origin: "*",
-    })
-);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
