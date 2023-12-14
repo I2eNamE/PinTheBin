@@ -15,7 +15,7 @@ export const Topbar = ({ isSidebarOpen, toggleSidebar, onLocationClick }) => {
     setIsSearchBarVisible(inputValue.trim().length > 0);
  
     // Make an API call when the input changes
-    axios.post('/bin/search', { 
+    axios.post('https://pinthebin-backend.vercel.app/bin/search', { 
       location: inputValue, 
       description: inputValue 
     },{ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })

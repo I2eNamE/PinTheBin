@@ -27,7 +27,7 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   const fetchBinData = (markerId) => {
-    axios.get(`/bin/${markerId}`,
+    axios.get(`https://pinthebin-backend.vercel.app/bin/${markerId}`,
       {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       })
@@ -51,7 +51,7 @@ export const Map = ({ center, onMarkerClick }) => {
     if (localStorage.getItem('token') == null) {
       router.push('/')
     }
-    axios.get("/bin",
+    axios.get("https://pinthebin-backend.vercel.app/bin",
       {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       })
