@@ -8,7 +8,7 @@ const path = require('path');
 const https = require('https');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
 
 const app = express();
