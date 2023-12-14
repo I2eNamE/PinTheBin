@@ -27,7 +27,7 @@ export const Map = ({ center, onMarkerClick }) => {
   };
 
   const fetchBinData = (markerId) => {
-    axios.get(`http://localhost:8080/bin/${markerId}`,
+    axios.get(`/bin/${markerId}`,
       {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       })
@@ -51,7 +51,7 @@ export const Map = ({ center, onMarkerClick }) => {
     if (localStorage.getItem('token') == null) {
       router.push('/')
     }
-    axios.get("http://localhost:8080/bin",
+    axios.get("/bin",
       {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       })

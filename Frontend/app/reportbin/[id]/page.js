@@ -45,7 +45,7 @@ const ReportBin = ({ params }) => {
         return;
       }
       
-      const response = await axios.post('http://localhost:8080/report', {
+      const response = await axios.post('/report', {
          // Replace with actual user ID or username
         description: reportContent,
         category: reportCategory,
