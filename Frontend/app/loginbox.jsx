@@ -11,11 +11,10 @@ export const LoginBox = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonContent, setButtonContent] = useState({ message: '' });
-  let url = 'https://pinthebin-backend.vercel.app/';
 
   const handleLogin = async () => {
     try {
-        const response = await axios.post(`${url}login`, {
+        const response = await axios.post(`https://pinthebin-backend.vercel.app/login`, {
             email,
             password,
         });
