@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 
 const app = express();
-// const port = 8080
+const port = 8080
 // implement jwt
 const secretKey = process.env.secretKey;
 
@@ -597,7 +597,7 @@ app.post('/appReport', (req, res) => {
 
 
 
-app.listen(() => {
+app.listen(port, () => {
     console.log(`server running`)
 })
 
