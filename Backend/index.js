@@ -16,8 +16,12 @@ const port = 80
 // implement jwt
 const secretKey = process.env.secretKey;
 
+corsOptions = {
+    origin: 'https://pinthebin.vercel.app/',
+    credentials: true,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
