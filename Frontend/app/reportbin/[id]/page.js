@@ -45,7 +45,7 @@ const ReportBin = ({ params }) => {
         return;
       }
       
-      const response = await axios.post('http://pinthebin-backend.vercel.app/report', {
+      const response = await axios.post('http://pinthebin-backend.vercel.app:8080/report', {
          // Replace with actual user ID or username
         description: reportContent,
         category: reportCategory,

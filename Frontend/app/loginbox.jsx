@@ -11,7 +11,7 @@ export const LoginBox = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonContent, setButtonContent] = useState({ message: '' });
-  let url = 'http://pinthebin-backend.vercel.app/';
+  let url = 'http://pinthebin-backend.vercel.app:8080/';
 
   const handleLogin = async () => {
     try {
