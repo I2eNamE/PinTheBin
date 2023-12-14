@@ -25,7 +25,7 @@ export default function EditBin({ params }) {
   const [isBinNotFoundVisible, setIsBinNotFoundVisible] = useState(false);
 
 
-  let url = 'http://localhost:8080/';
+  let url = 'http://pinthebin-backend.vercel.app:8080/';
   
 
 

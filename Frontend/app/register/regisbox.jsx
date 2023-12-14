@@ -27,7 +27,7 @@ export const RegisterBox = () => {
     try {
       // Send registration request to your backend API using Axios
       console.log('Data:', formData);
-      const response = await axios.post('http://localhost:8080/register', formData);
+      const response = await axios.post('http://pinthebin-backend.vercel.app:8080/register', formData);
       console.log('Response:', response);
 
       if (response.status === 201) {
