@@ -24,5 +24,5 @@
     "next-auth": "^4.23.2",
     "nodemon": "^3.0.1"
   },
-  "type": "commonjs"
+  "type": "module"
 }

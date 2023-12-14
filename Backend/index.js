@@ -1,15 +1,15 @@
-const fs = require('fs');
-const mysql = require('mysql');
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const path = require('path');
+import fs from 'fs';
+import mysql from 'mysql';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import path from 'path';
 
-const https = require('https');
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const multer = require('multer');
+import https from 'https';
+import 'dotenv/config'
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import multer from 'multer';
 
 const app = express();
 const port = 8080
@@ -600,7 +600,6 @@ app.listen(port, () => {
     console.log(`server running on port ${port}`)
 })
 
-module.exports = app;
 
 // https
 //     .createServer({
