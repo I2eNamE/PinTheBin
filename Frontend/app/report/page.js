@@ -44,7 +44,7 @@ export default function AppReport() {
         return;
       }
 
-      const response = await axios.post('https://pinthebin-backend.vercel.app/appReport', {
+      const response = await axios.post('https://pinthebin.vercel.app/api/appReport', {
          // Replace with actual user ID or username
         description: reportContent,
         category: reportCategory,

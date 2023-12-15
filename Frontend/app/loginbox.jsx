@@ -14,7 +14,7 @@ export const LoginBox = () => {
 
   const handleLogin = async () => {
     try {
-        const response = await axios.post(`https://pinthebin-backend.vercel.app/login`, {
+        const response = await axios.post(`https://pinthebin.vercel.app/api/login`, {
             email,
             password,
         });
