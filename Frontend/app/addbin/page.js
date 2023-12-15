@@ -25,7 +25,7 @@ export default function Addbin() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  let url = 'https://pinthebin.vercel.app/api/';
+  let url = 'https://pinthebin-backend.vercel.app/';
   
   const handleButtonStateChange = (newButtonStates) => {
     setButtonStates(newButtonStates);

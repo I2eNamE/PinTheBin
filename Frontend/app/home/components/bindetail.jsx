@@ -29,7 +29,7 @@ export const BinDetail = ({ onClose, markerId, setIsBinDetailVisible }) => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch(`https://pinthebin.vercel.app/api/bin/${markerId}`,{
+            const response = await fetch(`https://pinthebin-backend.vercel.app/bin/${markerId}`,{
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
               });
             const data = await response.json();

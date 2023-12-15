@@ -35,14 +35,5 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "tailwindcss": "3.3.3"
-  },
-  "type": "commonjs",
-  "pkg": {
-    "assets": [
-      "*.crt"
-    ],
-    "targets": [
-      "node8"
-    ]
   }
 }

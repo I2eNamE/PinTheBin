@@ -25,7 +25,7 @@ export default function EditBin({ params }) {
   const [isBinNotFoundVisible, setIsBinNotFoundVisible] = useState(false);
 
 
-  let url = 'https://pinthebin.vercel.app/api/';
+  let url = 'https://pinthebin-backend.vercel.app/';
   
 
 
