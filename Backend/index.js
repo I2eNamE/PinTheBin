@@ -17,7 +17,7 @@ const port = 4000
 const secretKey = process.env.secretKey;
 
 
-app.use(cors());
+app.use(cors({origin: true}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -25,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://pinthebin.vercel.app/"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test" || req.path === "/user")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
@@ -623,7 +625,7 @@ app.listen(port, () => {
     console.log(`server running`)
 })
 
-module.exports = allowCors(app);
+module.exports = app;
 
 // https
 //     .createServer({
