@@ -60,7 +60,7 @@ const allowCors = fn => async (req, res) => {
   
 
 // create connection_data to database
-const certPath = path.join(__dirname, './cert.pem');
+const certPath = path.join(__dirname, '/api/cert.pem');
 const serverCa = fs.readFileSync(certPath);
 const conn = mysql.createConnection({
     host: process.env.host, user: process.env.user, // Do not use username as it will be collided with host username
