@@ -1,7 +1,7 @@
 const fs = require('fs');
 const mysql = require('mysql');
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 
@@ -17,7 +17,12 @@ const port = 4000
 const secretKey = process.env.secretKey;
 
 
-// app.use(cors({origin: true}));
+app.use(cors({
+    origin: 'https://pinthebin.vercel.app', // use your actual domain name (or localhost), using * is not recommended
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+    credentials: true
+}))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -25,8 +30,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "pinthebin.vercel.app"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test" || req.path === "/user")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
