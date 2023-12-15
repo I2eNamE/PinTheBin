@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //  wan to check jwt token before use other function except  /login
 app.use((req, res, next) => {
+    console.log("req.path: ", req.path)
     if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test" || req.path === "/user")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
@@ -36,7 +37,6 @@ app.use((req, res, next) => {
 });
 
 const allowCors = fn => async (req, res) => {
-    console.log('Run allowCors')
     res.setHeader('Access-Control-Allow-Credentials', true)
     res.setHeader('Access-Control-Allow-Origin', '*')
     // another common pattern
