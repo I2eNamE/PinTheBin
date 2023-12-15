@@ -15,14 +15,34 @@
     "axios": "^1.5.0",
     "babel": "^6.23.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
     "next": "^13.4.19",
     "next-auth": "^4.23.2",
+    "nodemon": "^3.0.2",
     "postcss": "8.4.29",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "tailwindcss": "3.3.3"
+  },
+  "pkg": {
+    "assets": [
+      "*.crt"
+    ],
+    "targets": [
+      "node8"
+    ]
   }
 }
