@@ -23,10 +23,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 
-//  wan to check jwt token before use other function except  /login
+//  wan to check jwt token before use other function except  /api/login
 app.use((req, res, next) => {
     console.log("req.path: ", req.path)
-    if (!(req.path === "/login" || req.path === "/register" || req.path === "/upload" || req.path === "/test" || req.path === "/user")) {
+    if (!(req.path === "/api/login" || req.path === "/api/register" || req.path === "/api/upload" || req.path === "/api/test")) {
         const result = verifyToken(req, res, next);
         if (result === true) {
             next();
@@ -110,7 +110,7 @@ const verifyToken = (req, res, next) => {
 };
 
 // test rest api
-app.get('/test', (req, res) => {
+app.get('/api/test', (req, res) => {
     res.send("Hello world, API works!");
 })
 
@@ -136,7 +136,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // handle upload file
-app.post('/upload', upload.single('fileInput'), (req, res) => {
+app.post('/api/upload', upload.single('fileInput'), (req, res) => {
     if (req.fileValidationError) {
         return res.status(400).send({ error: true, message: req.fileValidationError });
     } else if (!req.file) {
@@ -180,7 +180,7 @@ app.post('/upload', upload.single('fileInput'), (req, res) => {
 
 
 // start user_info table 
-app.get('/user', (req, res) => {
+app.get('/api/user', (req, res) => {
     let command = `SELECT * FROM user_info`;
     conn.query(command, (err, result) => {
         if (err) throw err; else if (result.length === 0) {
@@ -189,7 +189,7 @@ app.get('/user', (req, res) => {
     })
 })
 
-app.get('/user/:id', (req, res) => {
+app.get('/api/user/:id', (req, res) => {
     let id = req.params.id;
     let command = `SELECT * FROM user_info WHERE id=?`;
     conn.query(command, [id], (err, result) => {
@@ -199,7 +199,7 @@ app.get('/user/:id', (req, res) => {
     })
 })
 
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     let { email, name, password, confirmPassword } = req.body;
 
     // Check if passwords match
@@ -255,7 +255,7 @@ app.post('/register', async (req, res) => {
 
 // })
 
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
     let { email, password } = req.body;
     let command = `SELECT * FROM user_info WHERE email = ?`;
     
@@ -289,15 +289,15 @@ app.post('/login', (req, res) => {
 });
 
 // Middleware to protect routes with JWT
-app.use('/secure', verifyToken);
+app.use('/api/secure', verifyToken);
 
 // Example of a secure route
-app.get('/secure/data', (req, res) => {
+app.get('/api/secure/data', (req, res) => {
     res.status(200).json({ error: false, message: 'Secure data' });
 });
 
 
-app.patch('/changepassword', (req, res) => {
+app.patch('/api/changepassword', (req, res) => {
     let { id, oldPassword, newPassword, confirmPassword } = req.body;
     let commandSearch = `SELECT password FROM user_info where id = ?`;
     let commandUpdate = `UPDATE user_info SET password = ? WHERE id = ?`;
@@ -333,7 +333,7 @@ app.patch('/changepassword', (req, res) => {
 
 
 // end user_info table and start bin_info table
-app.get('/bin', (reg, res) => {
+app.get('/api/bin', (reg, res) => {
     let command = `SELECT * FROM bin_info`;
     conn.query(command, (err, result) => {
         if (err) throw err; else if (result.length === 0) {
@@ -342,7 +342,7 @@ app.get('/bin', (reg, res) => {
     })
 })
 
-app.get("/bin/:id", (req, res) => {
+app.get("/api/bin/:id", (req, res) => {
     let id = req.params.id;
     let command = `SELECT * FROM bin_info inner join user_info ON bin_info.userUpdate = user_info.id WHERE bin_info.id = ?;`; // TODO: Sanitize sql query
     conn.query(command, [id], (err, result) => {
@@ -353,7 +353,7 @@ app.get("/bin/:id", (req, res) => {
 })
 
 // Search bin by location or description
-app.post('/bin/search', (req, res) => {
+app.post('/api/bin/search', (req, res) => {
     let { location, description } = req.body;
     let command = `SELECT * FROM bin_info WHERE location LIKE ? OR description LIKE ?;`; // TODO: Sanitize sql query
     conn.query(command, [`%${location}%`, `%${description}%`], (err, result) => {
@@ -365,7 +365,7 @@ app.post('/bin/search', (req, res) => {
     });
 });
 
-app.post('/bin', (req, res) => {
+app.post('/api/bin', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, secretKey);
     const UserId = decoded.userId;
@@ -402,7 +402,7 @@ app.post('/bin', (req, res) => {
     });
 });
 
-app.patch('/bin', (req, res) => {
+app.patch('/api/bin', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, secretKey);
     const UserId = decoded.userId;
@@ -457,7 +457,7 @@ app.patch('/bin', (req, res) => {
 });
 
 
-app.delete("/bin/:id", (req, res) => {
+app.delete("/api/bin/:id", (req, res) => {
     let binId = req.params.id;
     let commanddelete = `DELETE FROM bin_info WHERE id = ?`;
 
@@ -481,7 +481,7 @@ app.delete("/bin/:id", (req, res) => {
 
 
 // end bin info and start report tablea
-app.get('/report', (req, res) => {
+app.get('/api/report', (req, res) => {
     let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,
                     report.description, bin_info.lat,bin_info.lng 
                     from (( report inner join bin_info on report.bin = bin_info.id)
@@ -501,7 +501,7 @@ app.get('/report', (req, res) => {
 
 
 // what is id report id , user id  ??
-app.get('/report/:id', (req, res) => {
+app.get('/api/report/:id', (req, res) => {
     let id = req.params.id;
     let command = `SELECT report.id ,report.report_date , user_info.name as user_report, report.header,report.category,report.description, bin_info.lat,bin_info.lng 
     from (( report inner join bin_info on report.bin = bin_info.id)
@@ -521,7 +521,7 @@ app.get('/report/:id', (req, res) => {
 
 
 // Report bin
-app.post('/report', (req, res) => {
+app.post('/api/report', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, secretKey);
     let { description = null, category, header, bin } = req.body;
@@ -554,7 +554,7 @@ app.post('/report', (req, res) => {
 
 
 // it normal report 
-app.get('/appReport', (req, res) => {
+app.get('/api/appReport', (req, res) => {
     let command = `select * from app_report;`;
     conn.query(command, (err, result) => {
         if (err) throw err; else if (result.length === 0) {
@@ -570,7 +570,7 @@ app.get('/appReport', (req, res) => {
     })
 })
 
-app.get('/appReport/:id', (req, res) => {
+app.get('/api/appReport/:id', (req, res) => {
     let id = req.params.id;
     let command = `select * from app_report WHERE id = ?;`;
     conn.query(command, [id], (err, result) => {
@@ -587,7 +587,7 @@ app.get('/appReport/:id', (req, res) => {
     })
 })
 
-app.post('/appReport', (req, res) => {
+app.post('/api/appReport', (req, res) => {
     let token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, secretKey);
     let { header, category, description = null,  } = req.body;
